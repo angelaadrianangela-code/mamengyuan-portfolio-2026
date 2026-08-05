@@ -1,8 +1,10 @@
+import type { CSSProperties } from "react";
+
 const projects = [
   {
     index: "01",
     title: "MOMO PET",
-    subtitle: "宠物生活方式品牌视觉系统",
+    subtitle: "宠物生活方式品牌视觉识别系统",
     tags: ["BRAND IDENTITY", "IP DESIGN", "VISUAL SYSTEM"],
     image: "/assets/project-momopet.webp",
     accent: "#ff6c5f",
@@ -10,15 +12,15 @@ const projects = [
   {
     index: "02",
     title: "拾光 SHIGUANG",
-    subtitle: "邻家食品服务平台 UI / IP 设计",
+    subtitle: "临期食品服务平台 UI / IP 设计",
     tags: ["UI DESIGN", "PRODUCT", "IP DESIGN"],
     image: "/assets/project-ui.webp",
     accent: "#d7ff59",
   },
   {
     index: "03",
-    title: "五虎镇祥",
-    subtitle: "非遗文化的当代文创表达",
+    title: "五虎祯祥",
+    subtitle: "非物质文化遗产视觉文创设计",
     tags: ["CULTURAL IP", "PACKAGING", "AIGC"],
     image: "/assets/project-wuhu.webp",
     accent: "#ff4c70",
@@ -26,16 +28,16 @@ const projects = [
   {
     index: "04",
     title: "上岛 · 咖啡",
-    subtitle: "咖啡品牌与移动点单体验",
-    tags: ["BRANDING", "MOBILE UI", "RETAIL"],
+    subtitle: "咖啡品牌与线下空间视觉体验",
+    tags: ["BRANDING", "RETAIL", "VISUAL IDENTITY"],
     image: "/assets/project-cafe.webp",
     accent: "#b4825e",
   },
   {
     index: "05",
     title: "兰也 LANYE",
-    subtitle: "轻奢美护品牌视觉识别",
-    tags: ["VI SYSTEM", "RETAIL", "WEB"],
+    subtitle: "轻奢美妆品牌视觉识别系统",
+    tags: ["VI SYSTEM", "RETAIL", "BEAUTY"],
     image: "/assets/project-lanye.webp",
     accent: "#d6b16b",
   },
@@ -61,7 +63,7 @@ const strengths = [
     no: "B",
     title: "UI 与体验设计",
     en: "Digital Experience",
-    text: "兼顾信息层级、用户路径与品牌表达，让界面不只清晰易用，也拥有鲜明气质。",
+    text: "兼顾信息层级、用户路径与品牌表达，让界面不仅清晰易用，也拥有鲜明气质。",
     tools: "FIGMA · PROTOTYPE",
   },
   {
@@ -91,11 +93,13 @@ export default function Home() {
           loop
           playsInline
           poster="/assets/hero-poster.webp"
-          aria-hidden="true"
-        />
+          aria-label="作品集动态背景"
+        >
+          <source src="/assets/hero-video.mp4" type="video/mp4" />
+        </video>
         <div className="heroShade" />
         <nav className="nav shell" aria-label="主导航">
-          <a className="monogram" href="#home" aria-label="回到首页">
+          <a className="monogram" href="#home" aria-label="返回首页">
             M<span>·</span>MY
           </a>
           <div className="navLinks">
@@ -159,8 +163,8 @@ export default function Home() {
               <em>鲜活表达</em>之间做设计。
             </h2>
             <p className="intro">
-              艺术与科技专业本科在读，专注品牌视觉、UI 与 AIGC
-              创作。多次主导品牌物料、IP、界面和动态内容项目，擅长把复杂需求整理成清晰、统一且具有传播力的视觉语言。
+              河北工业大学艺术与科技专业本科在读，专注品牌视觉、UI 与 AIGC 创作。
+              多次主导品牌物料、IP、界面和动态内容项目，擅长把复杂需求整理成清晰、统一且具有传播力的视觉语言。
             </p>
 
             <div className="contactRows">
@@ -184,22 +188,10 @@ export default function Home() {
         </div>
 
         <div className="stats" aria-label="项目数据">
-          <div>
-            <strong>06+</strong>
-            <span>完整项目系统</span>
-          </div>
-          <div>
-            <strong>18%</strong>
-            <span>详情页点击率提升</span>
-          </div>
-          <div>
-            <strong>TOP 15%</strong>
-            <span>专业成绩排名</span>
-          </div>
-          <div>
-            <strong>04</strong>
-            <span>设计与实践荣誉</span>
-          </div>
+          <div><strong>21</strong><span>页产品图册独立设计</span></div>
+          <div><strong>18%</strong><span>详情页点击率提升</span></div>
+          <div><strong>TOP 15%</strong><span>专业成绩排名</span></div>
+          <div><strong>06</strong><span>精选项目系统</span></div>
         </div>
 
         <div className="experience">
@@ -240,30 +232,21 @@ export default function Home() {
         <div className="shell">
           <header className="sectionHead workHead">
             <span>02 / SELECTED WORK</span>
-            <h2>精选项目 <sup>06</sup></h2>
+            <h2>精选项目<sup>06</sup></h2>
           </header>
 
           <div className="projectGrid">
             {projects.map((project) => (
-              <article
-                className="projectCard"
-                key={project.title}
-                style={{ "--accent": project.accent } as React.CSSProperties}
-              >
+              <article className="projectCard" key={project.title} style={{ "--accent": project.accent } as CSSProperties}>
                 <div className="projectMedia">
                   <img src={project.image} alt={`${project.title} 项目展示`} loading="lazy" />
                   <span className="projectIndex">{project.index}</span>
                   <span className="viewMark">VIEW CASE ↗</span>
                 </div>
                 <div className="projectInfo">
-                  <div>
-                    <h3>{project.title}</h3>
-                    <p>{project.subtitle}</p>
-                  </div>
+                  <div><h3>{project.title}</h3><p>{project.subtitle}</p></div>
                   <ul aria-label="项目类型">
-                    {project.tags.map((tag) => (
-                      <li key={tag}>{tag}</li>
-                    ))}
+                    {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
                   </ul>
                 </div>
               </article>
@@ -275,21 +258,13 @@ export default function Home() {
       <section className="strengths shell section" id="strengths">
         <header className="sectionHead strengthHead">
           <span>03 / STRENGTHS</span>
-          <h2>
-            从想法到落地，
-            <br />
-            让每一步都<span>有依据。</span>
-          </h2>
+          <h2>从想法到落地，<br />让每一步都<span>有依据。</span></h2>
         </header>
-
         <div className="strengthGrid">
           {strengths.map((item) => (
             <article key={item.no}>
               <div className="strengthNo">{item.no}</div>
-              <div className="strengthIcon" aria-hidden="true">
-                <span />
-                <i />
-              </div>
+              <div className="strengthIcon" aria-hidden="true"><span /><i /></div>
               <h3>{item.title}</h3>
               <h4>{item.en}</h4>
               <p>{item.text}</p>
@@ -302,28 +277,13 @@ export default function Home() {
       <footer className="footer" id="contact">
         <div className="footerGrid" aria-hidden="true" />
         <div className="shell footerInner">
-          <div className="footerTop">
-            <span>04 / CONTACT</span>
-            <p>AVAILABLE FOR INTERNSHIP & COLLABORATION</p>
-          </div>
-          <div className="footerTitle">
-            <span>LET&apos;S MAKE</span>
-            <span>SOMETHING <em>VIVID.</em></span>
-          </div>
+          <div className="footerTop"><span>04 / CONTACT</span><p>AVAILABLE FOR INTERNSHIP & COLLABORATION</p></div>
+          <div className="footerTitle"><span>LET&apos;S MAKE</span><span>SOMETHING <em>VIVID.</em></span></div>
           <div className="footerBottom">
-            <div>
-              <p>有项目、实习机会或一个值得讨论的想法？</p>
-              <p>欢迎来信，我会尽快回复。</p>
-            </div>
-            <a className="mailButton" href="mailto:2921769497@qq.com">
-              <span>发一封邮件</span>
-              <i>↗</i>
-            </a>
+            <div><p>有项目、实习机会或一个值得讨论的想法？</p><p>欢迎来信，我会尽快回复。</p></div>
+            <a className="mailButton" href="mailto:2921769497@qq.com"><span>发一封邮件</span><i>↗</i></a>
           </div>
-          <div className="footerMeta">
-            <span>© 2026 MA MENGYUAN</span>
-            <a href="#home">BACK TO TOP ↑</a>
-          </div>
+          <div className="footerMeta"><span>© 2026 MA MENGYUAN</span><a href="#home">BACK TO TOP ↑</a></div>
         </div>
       </footer>
     </main>
