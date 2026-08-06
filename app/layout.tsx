@@ -9,13 +9,13 @@ export const metadata: Metadata = {
     title: "马梦圆 | 视觉设计与 AIGC 作品集",
     description: "品牌视觉、UI、文创与 AIGC 设计作品。",
     type: "website",
-    images: [{ url: "/og.png", width: 1680, height: 945, alt: "马梦圆视觉设计作品集" }],
+    images: [{ url: "/og-motion-v2.png", width: 1680, height: 945, alt: "马梦圆视觉设计作品集" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "马梦圆 | 视觉设计与 AIGC 作品集",
     description: "品牌视觉、UI、文创与 AIGC 设计作品。",
-    images: ["/og.png"],
+    images: ["/og-motion-v2.png"],
   },
 };
 

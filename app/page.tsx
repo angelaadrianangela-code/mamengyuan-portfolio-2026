@@ -1,4 +1,7 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { useEffect, useRef } from "react";
+import type { CSSProperties, MouseEvent } from "react";
 
 const projects = [
   {
@@ -83,8 +86,58 @@ const strengths = [
 ];
 
 export default function Home() {
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cursor = cursorRef.current;
+    const progress = progressRef.current;
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!cursor || event.pointerType === "touch") return;
+      cursor.style.setProperty("--cursor-x", `${event.clientX}px`);
+      cursor.style.setProperty("--cursor-y", `${event.clientY}px`);
+      cursor.dataset.visible = "true";
+    };
+    const onScroll = () => {
+      if (!progress) return;
+      const distance = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.transform = `scaleX(${distance > 0 ? window.scrollY / distance : 0})`;
+    };
+
+    const observer = reduceMotion
+      ? null
+      : new IntersectionObserver(
+          (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("isVisible")),
+          { threshold: 0.13, rootMargin: "0px 0px -7%" },
+        );
+
+    document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
+      if (reduceMotion) element.classList.add("isVisible");
+      else observer?.observe(element);
+    });
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  const moveProjectGlow = (event: MouseEvent<HTMLElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    event.currentTarget.style.setProperty("--mx", `${event.clientX - bounds.left}px`);
+    event.currentTarget.style.setProperty("--my", `${event.clientY - bounds.top}px`);
+  };
+
   return (
     <main>
+      <div className="scrollProgress" ref={progressRef} aria-hidden="true" />
+      <div className="cursorAura" ref={cursorRef} aria-hidden="true" />
       <section className="hero" id="home">
         <video
           className="heroVideo"
@@ -98,6 +151,7 @@ export default function Home() {
           <source src="/assets/hero-video.mp4" type="video/mp4" />
         </video>
         <div className="heroShade" />
+        <div className="heroMesh" aria-hidden="true"><span /><span /><span /></div>
         <nav className="nav shell" aria-label="主导航">
           <a className="monogram" href="#home" aria-label="返回首页">
             M<span>·</span>MY
@@ -118,8 +172,8 @@ export default function Home() {
             VISUAL DESIGNER · AIGC CREATOR · 2026
           </div>
           <h1>
-            <span>MA</span>
-            <span>MENGYUAN</span>
+            <span><i>MA</i></span>
+            <span><i>MENGYUAN</i></span>
           </h1>
           <div className="heroBottom">
             <p>
@@ -137,15 +191,23 @@ export default function Home() {
           <span>SCROLL</span>
           <i>↓</i>
         </a>
+        <div className="heroCoordinates" aria-hidden="true"><span>39.9042° N</span><span>116.4074° E</span></div>
       </section>
 
+      <div className="marquee" aria-label="设计方向">
+        <div className="marqueeTrack">
+          <span>BRAND SYSTEMS</span><i>✦</i><span>VISUAL DESIGN</span><i>✦</i><span>AIGC MOTION</span><i>✦</i><span>DIGITAL EXPERIENCE</span><i>✦</i>
+          <span aria-hidden="true">BRAND SYSTEMS</span><i aria-hidden="true">✦</i><span aria-hidden="true">VISUAL DESIGN</span><i aria-hidden="true">✦</i><span aria-hidden="true">AIGC MOTION</span><i aria-hidden="true">✦</i><span aria-hidden="true">DIGITAL EXPERIENCE</span><i aria-hidden="true">✦</i>
+        </div>
+      </div>
+
       <section className="about shell section" id="about">
-        <header className="sectionHead">
+        <header className="sectionHead" data-reveal>
           <span>01 / ABOUT</span>
           <p>设计不是装饰，而是让信息与情绪同时抵达。</p>
         </header>
 
-        <div className="aboutGrid">
+        <div className="aboutGrid" data-reveal>
           <figure className="portraitCard">
             <div className="portraitGlow" />
             <img src="/assets/portrait.webp" alt="马梦圆肖像" />
@@ -187,14 +249,14 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="stats" aria-label="项目数据">
+        <div className="stats" aria-label="项目数据" data-reveal>
           <div><strong>21</strong><span>页产品图册独立设计</span></div>
           <div><strong>18%</strong><span>详情页点击率提升</span></div>
           <div><strong>TOP 15%</strong><span>专业成绩排名</span></div>
           <div><strong>06</strong><span>精选项目系统</span></div>
         </div>
 
-        <div className="experience">
+        <div className="experience" data-reveal>
           <div className="experienceTitle">
             <span>EXPERIENCE</span>
             <h3>把设计放进真实场景。</h3>
@@ -230,14 +292,14 @@ export default function Home() {
 
       <section className="work section" id="work">
         <div className="shell">
-          <header className="sectionHead workHead">
+          <header className="sectionHead workHead" data-reveal>
             <span>02 / SELECTED WORK</span>
             <h2>精选项目<sup>06</sup></h2>
           </header>
 
           <div className="projectGrid">
             {projects.map((project) => (
-              <article className="projectCard" key={project.title} style={{ "--accent": project.accent } as CSSProperties}>
+              <article className="projectCard" key={project.title} style={{ "--accent": project.accent } as CSSProperties} onMouseMove={moveProjectGlow} data-reveal>
                 <div className="projectMedia">
                   <img src={project.image} alt={`${project.title} 项目展示`} loading="lazy" />
                   <span className="projectIndex">{project.index}</span>
@@ -256,13 +318,13 @@ export default function Home() {
       </section>
 
       <section className="strengths shell section" id="strengths">
-        <header className="sectionHead strengthHead">
+        <header className="sectionHead strengthHead" data-reveal>
           <span>03 / STRENGTHS</span>
           <h2>从想法到落地，<br />让每一步都<span>有依据。</span></h2>
         </header>
         <div className="strengthGrid">
           {strengths.map((item) => (
-            <article key={item.no}>
+            <article key={item.no} data-reveal>
               <div className="strengthNo">{item.no}</div>
               <div className="strengthIcon" aria-hidden="true"><span /><i /></div>
               <h3>{item.title}</h3>
