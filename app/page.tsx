@@ -145,10 +145,10 @@ export default function Home() {
           muted
           loop
           playsInline
-          poster="/assets/hero-poster.webp"
+          poster="/assets/hero-video-poster.jpg"
           aria-label="作品集动态背景"
         >
-          <source src="/assets/hero-video.mp4" type="video/mp4" />
+          <source src="/assets/hero-video-art-healing.mp4" type="video/mp4" />
         </video>
         <div className="heroShade" />
         <div className="heroMesh" aria-hidden="true"><span /><span /><span /></div>
