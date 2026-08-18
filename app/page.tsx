@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, MouseEvent } from "react";
 
 const projects = [
@@ -10,6 +10,7 @@ const projects = [
     subtitle: "宠物生活方式品牌视觉识别系统",
     tags: ["BRAND IDENTITY", "IP DESIGN", "VISUAL SYSTEM"],
     image: "/assets/project-momopet.webp",
+    pdf: "/projects/01-momopet.pdf",
     accent: "#ff6c5f",
   },
   {
@@ -18,6 +19,7 @@ const projects = [
     subtitle: "临期食品服务平台 UI / IP 设计",
     tags: ["UI DESIGN", "PRODUCT", "IP DESIGN"],
     image: "/assets/project-ui.webp",
+    pdf: "/projects/02-shiguang.pdf",
     accent: "#d7ff59",
   },
   {
@@ -25,7 +27,9 @@ const projects = [
     title: "五虎祯祥",
     subtitle: "非物质文化遗产视觉文创设计",
     tags: ["CULTURAL IP", "PACKAGING", "AIGC"],
-    image: "/assets/project-wuhu.webp",
+    image: "/assets/project-wuhu-cover.webp",
+    pdf: "/projects/03-wuhu.pdf",
+    fit: "contain",
     accent: "#ff4c70",
   },
   {
@@ -34,6 +38,7 @@ const projects = [
     subtitle: "咖啡品牌与线下空间视觉体验",
     tags: ["BRANDING", "RETAIL", "VISUAL IDENTITY"],
     image: "/assets/project-cafe.webp",
+    pdf: "/projects/04-shangdao-cafe.pdf",
     accent: "#b4825e",
   },
   {
@@ -41,7 +46,8 @@ const projects = [
     title: "兰也 LANYE",
     subtitle: "轻奢美妆品牌视觉识别系统",
     tags: ["VI SYSTEM", "RETAIL", "BEAUTY"],
-    image: "/assets/project-lanye.webp",
+    image: "/assets/project-lanye-cover.webp",
+    pdf: "/projects/05-lanye.pdf",
     accent: "#d6b16b",
   },
   {
@@ -50,6 +56,7 @@ const projects = [
     subtitle: "滑雪品牌产品视觉与电商设计",
     tags: ["E-COMMERCE", "ART DIRECTION", "LAYOUT"],
     image: "/assets/project-skicat.webp",
+    pdf: "/projects/06-skicat.pdf",
     accent: "#f45e43",
   },
 ];
@@ -88,6 +95,9 @@ const strengths = [
 export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const [copiedValue, setCopiedValue] = useState<string | null>(null);
+  const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
+  const selectedProject = selectedProjectIndex === null ? null : projects[selectedProjectIndex];
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -128,10 +138,52 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    if (selectedProjectIndex === null) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedProjectIndex(null);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [selectedProjectIndex]);
+
+  const changeProject = (direction: -1 | 1) => {
+    setSelectedProjectIndex((current) => {
+      if (current === null) return 0;
+      return (current + direction + projects.length) % projects.length;
+    });
+  };
+
   const moveProjectGlow = (event: MouseEvent<HTMLElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
     event.currentTarget.style.setProperty("--mx", `${event.clientX - bounds.left}px`);
     event.currentTarget.style.setProperty("--my", `${event.clientY - bounds.top}px`);
+  };
+
+  const copyToClipboard = async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+
+    setCopiedValue(value);
+    window.setTimeout(() => setCopiedValue((current) => (current === value ? null : current)), 1600);
   };
 
   return (
@@ -139,17 +191,7 @@ export default function Home() {
       <div className="scrollProgress" ref={progressRef} aria-hidden="true" />
       <div className="cursorAura" ref={cursorRef} aria-hidden="true" />
       <section className="hero" id="home">
-        <video
-          className="heroVideo"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/assets/hero-video-poster.jpg"
-          aria-label="作品集动态背景"
-        >
-          <source src="/assets/hero-video-art-healing.mp4" type="video/mp4" />
-        </video>
+        <img className="heroImage" src="/hero-ma-mengyuan.png" alt="" aria-hidden="true" />
         <div className="heroShade" />
         <div className="heroMesh" aria-hidden="true"><span /><span /><span /></div>
         <nav className="nav shell" aria-label="主导航">
@@ -161,9 +203,16 @@ export default function Home() {
             <a href="#work">项目</a>
             <a href="#strengths">能力</a>
           </div>
-          <a className="contactPill" href="mailto:2921769497@qq.com">
-            联系我 <span>↗</span>
-          </a>
+          <button
+            className="contactPill"
+            type="button"
+            data-copy-value="13363038187"
+            data-copy-active={copiedValue === "13363038187"}
+            onClick={() => copyToClipboard("13363038187")}
+            aria-label="复制电话 13363038187"
+          >
+            {copiedValue === "13363038187" ? "已复制电话" : "联系我"} <span>↗</span>
+          </button>
         </nav>
 
         <div className="heroContent shell">
@@ -171,10 +220,6 @@ export default function Home() {
             <span className="statusDot" />
             VISUAL DESIGNER · AIGC CREATOR · 2026
           </div>
-          <h1>
-            <span><i>MA</i></span>
-            <span><i>MENGYUAN</i></span>
-          </h1>
           <div className="heroBottom">
             <p>
               用品牌、界面与动态影像，
@@ -210,7 +255,7 @@ export default function Home() {
         <div className="aboutGrid" data-reveal>
           <figure className="portraitCard">
             <div className="portraitGlow" />
-            <img src="/assets/portrait.webp" alt="马梦圆肖像" />
+            <img src="/assets/portrait-mamengyuan-v3.png" alt="马梦圆肖像" />
             <figcaption>
               <span>MA MENGYUAN</span>
               <span>VISUAL DESIGNER</span>
@@ -278,14 +323,6 @@ export default function Home() {
               </div>
               <span>CHENGDE</span>
             </article>
-            <article>
-              <time>2023.09 — 2024.09</time>
-              <div>
-                <h4>校团校新媒体工作中心</h4>
-                <p>设计负责人 · 校园艺术周主视觉与新媒体内容运营</p>
-              </div>
-              <span>CAMPUS</span>
-            </article>
           </div>
         </div>
       </section>
@@ -298,9 +335,25 @@ export default function Home() {
           </header>
 
           <div className="projectGrid">
-            {projects.map((project) => (
-              <article className="projectCard" key={project.title} style={{ "--accent": project.accent } as CSSProperties} onMouseMove={moveProjectGlow} data-reveal>
-                <div className="projectMedia">
+            {projects.map((project, projectIndex) => (
+              <article
+                className="projectCard"
+                key={project.title}
+                style={{ "--accent": project.accent } as CSSProperties}
+                onMouseMove={moveProjectGlow}
+                onClick={() => setSelectedProjectIndex(projectIndex)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setSelectedProjectIndex(projectIndex);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`浏览 ${project.title} 项目详情`}
+                data-reveal
+              >
+                <div className={`projectMedia${project.fit === "contain" ? " projectMediaContain" : ""}`}>
                   <img src={project.image} alt={`${project.title} 项目展示`} loading="lazy" />
                   <span className="projectIndex">{project.index}</span>
                   <span className="viewMark">VIEW CASE ↗</span>
@@ -316,6 +369,35 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {selectedProject && (
+        <div
+          className="projectReader"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selectedProject.title} 项目详情`}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setSelectedProjectIndex(null);
+          }}
+        >
+          <div className="projectReaderPanel" style={{ "--accent": selectedProject.accent } as CSSProperties}>
+            <header className="projectReaderHeader">
+              <div className="projectReaderIdentity">
+                <span>{selectedProject.index} / PROJECT</span>
+                <strong>{selectedProject.title}</strong>
+              </div>
+              <div className="projectReaderActions">
+                <button type="button" onClick={() => changeProject(-1)} aria-label="浏览上一个项目">← 上一个</button>
+                <button type="button" onClick={() => changeProject(1)} aria-label="浏览下一个项目">下一个 →</button>
+                <button className="projectReaderClose" type="button" onClick={() => setSelectedProjectIndex(null)} aria-label="关闭项目详情">关闭 ×</button>
+              </div>
+            </header>
+            <div className="projectReaderBody">
+              <iframe src={`${selectedProject.pdf}#view=FitH&toolbar=1`} title={`${selectedProject.title} 项目 PDF`} />
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="strengths shell section" id="strengths">
         <header className="sectionHead strengthHead" data-reveal>
@@ -343,7 +425,16 @@ export default function Home() {
           <div className="footerTitle"><span>LET&apos;S MAKE</span><span>SOMETHING <em>VIVID.</em></span></div>
           <div className="footerBottom">
             <div><p>有项目、实习机会或一个值得讨论的想法？</p><p>欢迎来信，我会尽快回复。</p></div>
-            <a className="mailButton" href="mailto:2921769497@qq.com"><span>发一封邮件</span><i>↗</i></a>
+            <button
+              className="mailButton"
+              type="button"
+              data-copy-value="2921769497@qq.com"
+              data-copy-active={copiedValue === "2921769497@qq.com"}
+              onClick={() => copyToClipboard("2921769497@qq.com")}
+              aria-label="复制邮箱 2921769497@qq.com"
+            >
+              <span>{copiedValue === "2921769497@qq.com" ? "邮箱已复制" : "发一封邮件"}</span><i>↗</i>
+            </button>
           </div>
           <div className="footerMeta"><span>© 2026 MA MENGYUAN</span><a href="#home">BACK TO TOP ↑</a></div>
         </div>
