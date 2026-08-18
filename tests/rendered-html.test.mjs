@@ -23,6 +23,12 @@ test("renders Ma Mengyuan's portfolio", async () => {
   assert.doesNotMatch(html, /codex-preview|Building your site/);
 });
 
+test("exports a static homepage for Cloudflare Pages", async () => {
+  const html = await readFile(new URL("../dist/client/index.html", import.meta.url), "utf8");
+  assert.match(html, /马梦圆/);
+  assert.match(html, /\/assets\//);
+});
+
 test("renders the supplied full-screen hero artwork without the old overlay title", async () => {
   const response = await render();
   assert.equal(response.status, 200);
