@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile, stat } from "node:fs/promises";
+import { access, readFile, stat } from "node:fs/promises";
 import test from "node:test";
 
 async function render() {
@@ -27,6 +27,11 @@ test("exports a static homepage for Cloudflare Pages", async () => {
   const html = await readFile(new URL("../dist/client/index.html", import.meta.url), "utf8");
   assert.match(html, /马梦圆/);
   assert.match(html, /\/assets\//);
+});
+
+test("removes generated Worker config that breaks Cloudflare Pages", async () => {
+  await assert.rejects(access(new URL("../.wrangler/deploy/config.json", import.meta.url)));
+  await assert.rejects(access(new URL("../dist/server/wrangler.json", import.meta.url)));
 });
 
 test("renders the supplied full-screen hero artwork without the old overlay title", async () => {
