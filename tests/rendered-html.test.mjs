@@ -34,15 +34,19 @@ test("keeps primary navigation anchors always linkable", async () => {
 
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(source, /handleAnchorClick/);
-  assert.match(source, /cancelAnimationFrame/);
-  assert.match(source, /addEventListener\("wheel"/);
+  assert.match(source, /event\.preventDefault\(\)/);
+  assert.match(source, /window\.scrollTo\(\{/);
+  assert.match(source, /behavior:\s*prefersReducedMotion \? "auto" : "smooth"/);
+  assert.doesNotMatch(source, /scrollAnimationRef|scrollAbortRef|AbortController/);
+  assert.doesNotMatch(source, /addEventListener\("wheel"/);
   assert.doesNotMatch(source, /isNavPinned|setIsNavPinned|scrollToAnchor/);
 });
 
 test("keeps the navigation fixed above every section", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /\.nav\s*{[\s\S]*position:\s*fixed/);
-  assert.match(css, /\.nav\s*{[\s\S]*z-index:\s*220/);
+  assert.match(css, /\.nav\s*{[\s\S]*z-index:\s*1000/);
+  assert.match(css, /\.navLinks a\s*{[\s\S]*min-height:\s*44px/);
   assert.doesNotMatch(css, /\.nav\.isPinned/);
 });
 

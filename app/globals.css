@@ -19,6 +19,7 @@ html {
   scroll-behavior: auto;
   scroll-padding-top: 96px;
   background: var(--bg);
+  overscroll-behavior-y: auto;
 }
 
 body {
@@ -27,6 +28,7 @@ body {
   color: var(--text);
   font-family: "Inter", "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: auto;
 }
 
 body::selection {
@@ -152,8 +154,13 @@ img {
 
 .navLinks a {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 8px;
   color: rgba(255, 255, 255, 0.72);
   font-size: 13px;
+  pointer-events: auto;
 }
 
 .navLinks a::after {
@@ -1065,7 +1072,7 @@ body {
 
 .nav {
   position: fixed;
-  z-index: 220;
+  z-index: 1000;
   top: 18px;
   left: 50%;
   height: 66px;
@@ -1083,6 +1090,11 @@ body {
   -webkit-backdrop-filter: blur(24px) saturate(150%);
   transform: translateX(-50%);
   animation: navDrop 0.9s 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.nav,
+.nav * {
+  pointer-events: auto;
 }
 
 .heroContent {

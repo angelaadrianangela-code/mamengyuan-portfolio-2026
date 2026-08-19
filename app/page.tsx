@@ -95,7 +95,6 @@ const strengths = [
 export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const scrollAnimationRef = useRef<number | null>(null);
   const [copiedValue, setCopiedValue] = useState<string | null>(null);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
   const selectedProject = selectedProjectIndex === null ? null : projects[selectedProjectIndex];
@@ -133,7 +132,6 @@ export default function Home() {
 
     return () => {
       observer?.disconnect();
-      if (scrollAnimationRef.current !== null) cancelAnimationFrame(scrollAnimationRef.current);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
     };
@@ -187,54 +185,24 @@ export default function Home() {
     window.setTimeout(() => setCopiedValue((current) => (current === value ? null : current)), 1600);
   };
 
-  const stopSmoothScroll = () => {
-    if (scrollAnimationRef.current === null) return;
-    cancelAnimationFrame(scrollAnimationRef.current);
-    scrollAnimationRef.current = null;
-  };
-
   const handleAnchorClick = (event: MouseEvent<HTMLAnchorElement>, targetId: string) => {
     const target = document.getElementById(targetId);
     if (!target) return;
 
     event.preventDefault();
-    stopSmoothScroll();
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const navOffset = targetId === "home" ? 0 : 96;
-    const startY = window.scrollY;
+    const nav = document.querySelector<HTMLElement>(".nav");
+    const navBottom = nav ? nav.getBoundingClientRect().bottom : 96;
     const maxY = document.documentElement.scrollHeight - window.innerHeight;
-    const targetY = Math.min(Math.max(target.getBoundingClientRect().top + startY - navOffset, 0), maxY);
+    const offset = targetId === "home" ? 0 : navBottom + 24;
+    const targetY = Math.min(Math.max(target.getBoundingClientRect().top + window.scrollY - offset, 0), maxY);
 
-    if (prefersReducedMotion) {
-      window.scrollTo(0, targetY);
-      window.history.replaceState(null, "", `#${targetId}`);
-      return;
-    }
-
-    const duration = 560;
-    const startTime = performance.now();
-    const ease = (value: number) => 1 - Math.pow(1 - value, 3);
-
-    const cancelOnUserScroll = () => stopSmoothScroll();
-    window.addEventListener("wheel", cancelOnUserScroll, { passive: true, once: true });
-    window.addEventListener("touchstart", cancelOnUserScroll, { passive: true, once: true });
-    window.addEventListener("keydown", cancelOnUserScroll, { once: true });
-
-    const tick = (time: number) => {
-      const progress = Math.min((time - startTime) / duration, 1);
-      window.scrollTo(0, startY + (targetY - startY) * ease(progress));
-
-      if (progress < 1) {
-        scrollAnimationRef.current = requestAnimationFrame(tick);
-        return;
-      }
-
-      scrollAnimationRef.current = null;
-      window.history.replaceState(null, "", `#${targetId}`);
-    };
-
-    scrollAnimationRef.current = requestAnimationFrame(tick);
+    window.scrollTo({
+      top: targetY,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+    window.history.replaceState(null, "", `#${targetId}`);
   };
 
   return (
