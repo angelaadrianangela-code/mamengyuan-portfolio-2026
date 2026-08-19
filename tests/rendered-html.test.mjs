@@ -18,6 +18,7 @@ test("renders Ma Mengyuan's portfolio", async () => {
   assert.match(html, /马梦圆/);
   assert.match(html, /MA MENGYUAN/);
   assert.match(html, /精选项目/);
+  assert.match(html, /关于我/);
   assert.match(html, /MOMO PET/);
   assert.match(html, /SKICAT/);
   assert.doesNotMatch(html, /codex-preview|Building your site/);

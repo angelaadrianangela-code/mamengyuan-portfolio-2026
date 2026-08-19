@@ -209,7 +209,7 @@ export default function Home() {
             M<span>·</span>MY
           </a>
           <div className="navLinks">
-            <a href="#about" onClick={(event) => { event.preventDefault(); scrollToAnchor("about"); }}>关于</a>
+            <a href="#about" onClick={(event) => { event.preventDefault(); scrollToAnchor("about"); }}>关于我</a>
             <a href="#work" onClick={(event) => { event.preventDefault(); scrollToAnchor("work"); }}>项目</a>
             <a href="#strengths" onClick={(event) => { event.preventDefault(); scrollToAnchor("strengths"); }}>能力</a>
           </div>
