@@ -33,6 +33,9 @@ test("keeps primary navigation anchors always linkable", async () => {
   assert.match(html, /href="#strengths"[^>]*>能力<\/a>/);
 
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(source, /handleAnchorClick/);
+  assert.match(source, /cancelAnimationFrame/);
+  assert.match(source, /addEventListener\("wheel"/);
   assert.doesNotMatch(source, /isNavPinned|setIsNavPinned|scrollToAnchor/);
 });
 
