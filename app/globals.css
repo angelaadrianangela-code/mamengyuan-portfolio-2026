@@ -17,6 +17,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;
   background: var(--bg);
 }
 
@@ -57,6 +58,7 @@ img {
 
 .section {
   padding-block: 150px;
+  scroll-margin-top: 96px;
 }
 
 .sectionHead {
@@ -824,6 +826,7 @@ img {
   overflow: hidden;
   color: #080909;
   background: var(--acid);
+  scroll-margin-top: 0;
 }
 
 .footerGrid {
@@ -1061,7 +1064,7 @@ body {
 .cursorAura[data-visible="true"] { opacity: 1; }
 
 .nav {
-  position: fixed;
+  position: absolute;
   z-index: 50;
   top: 20px;
   left: 50%;
@@ -1072,8 +1075,29 @@ body {
   background: rgba(9, 10, 10, 0.58);
   box-shadow: 0 12px 60px rgba(0, 0, 0, 0.22);
   backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
   transform: translateX(-50%);
+  transition:
+    top 0.28s ease,
+    background 0.28s ease,
+    border-color 0.28s ease,
+    box-shadow 0.28s ease,
+    backdrop-filter 0.28s ease;
   animation: navDrop 0.9s 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.nav.isPinned {
+  position: fixed;
+  top: 14px;
+  border-color: rgba(255, 255, 255, 0.2);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
+    rgba(9, 10, 10, 0.72);
+  box-shadow:
+    0 18px 70px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
 }
 
 .heroContent {
@@ -1417,7 +1441,10 @@ body {
 }
 
 @media (max-width: 760px) {
+  html { scroll-padding-top: 78px; }
+  .section { scroll-margin-top: 78px; }
   .nav { top: 12px; height: 58px; padding-inline: 15px 8px; }
+  .nav.isPinned { top: 10px; }
   .contactPill span { width: 25px; height: 25px; }
   .heroContent { min-height: 100svh; padding-top: 88px; }
   .heroCoordinates, .cursorAura { display: none; }
