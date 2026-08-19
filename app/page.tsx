@@ -96,7 +96,6 @@ export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const [copiedValue, setCopiedValue] = useState<string | null>(null);
-  const [isNavPinned, setIsNavPinned] = useState(false);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
   const selectedProject = selectedProjectIndex === null ? null : projects[selectedProjectIndex];
 
@@ -114,7 +113,6 @@ export default function Home() {
     const onScroll = () => {
       const distance = document.documentElement.scrollHeight - window.innerHeight;
       if (progress) progress.style.transform = `scaleX(${distance > 0 ? window.scrollY / distance : 0})`;
-      setIsNavPinned(window.scrollY > window.innerHeight - 120);
     };
 
     const observer = reduceMotion
@@ -187,15 +185,6 @@ export default function Home() {
     window.setTimeout(() => setCopiedValue((current) => (current === value ? null : current)), 1600);
   };
 
-  const scrollToAnchor = (targetId: string) => {
-    const target = document.getElementById(targetId);
-    if (!target) return;
-
-    const navOffset = targetId === "home" ? 0 : 92;
-    const top = target.getBoundingClientRect().top + window.scrollY - navOffset;
-    window.scrollTo({ top, behavior: "smooth" });
-  };
-
   return (
     <main>
       <div className="scrollProgress" ref={progressRef} aria-hidden="true" />
@@ -204,14 +193,14 @@ export default function Home() {
         <img className="heroImage" src="/hero-ma-mengyuan.png" alt="" aria-hidden="true" />
         <div className="heroShade" />
         <div className="heroMesh" aria-hidden="true"><span /><span /><span /></div>
-        <nav className={`nav shell${isNavPinned ? " isPinned" : ""}`} aria-label="主导航">
-          <a className="monogram" href="#home" aria-label="返回首页" onClick={(event) => { event.preventDefault(); scrollToAnchor("home"); }}>
+        <nav className="nav shell" aria-label="主导航">
+          <a className="monogram" href="#home" aria-label="返回首页">
             M<span>·</span>MY
           </a>
           <div className="navLinks">
-            <a href="#about" onClick={(event) => { event.preventDefault(); scrollToAnchor("about"); }}>关于我</a>
-            <a href="#work" onClick={(event) => { event.preventDefault(); scrollToAnchor("work"); }}>项目</a>
-            <a href="#strengths" onClick={(event) => { event.preventDefault(); scrollToAnchor("strengths"); }}>能力</a>
+            <a href="#about">关于我</a>
+            <a href="#work">项目</a>
+            <a href="#strengths">能力</a>
           </div>
           <button
             className="contactPill"
@@ -242,7 +231,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <a className="scrollCue" href="#about" aria-label="向下浏览" onClick={(event) => { event.preventDefault(); scrollToAnchor("about"); }}>
+        <a className="scrollCue" href="#about" aria-label="向下浏览">
           <span>SCROLL</span>
           <i>↓</i>
         </a>
@@ -446,7 +435,7 @@ export default function Home() {
               <span>{copiedValue === "2921769497@qq.com" ? "邮箱已复制" : "发一封邮件"}</span><i>↗</i>
             </button>
           </div>
-          <div className="footerMeta"><span>© 2026 MA MENGYUAN</span><a href="#home" onClick={(event) => { event.preventDefault(); scrollToAnchor("home"); }}>BACK TO TOP ↑</a></div>
+          <div className="footerMeta"><span>© 2026 MA MENGYUAN</span><a href="#home">BACK TO TOP ↑</a></div>
         </div>
       </footer>
     </main>

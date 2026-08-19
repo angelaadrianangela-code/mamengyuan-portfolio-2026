@@ -24,6 +24,25 @@ test("renders Ma Mengyuan's portfolio", async () => {
   assert.doesNotMatch(html, /codex-preview|Building your site/);
 });
 
+test("keeps primary navigation anchors always linkable", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /href="#about"[^>]*>关于我<\/a>/);
+  assert.match(html, /href="#work"[^>]*>项目<\/a>/);
+  assert.match(html, /href="#strengths"[^>]*>能力<\/a>/);
+
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /isNavPinned|setIsNavPinned|scrollToAnchor/);
+});
+
+test("keeps the navigation fixed above every section", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /\.nav\s*{[\s\S]*position:\s*fixed/);
+  assert.match(css, /\.nav\s*{[\s\S]*z-index:\s*220/);
+  assert.doesNotMatch(css, /\.nav\.isPinned/);
+});
+
 test("exports a static homepage for Cloudflare Pages", async () => {
   const html = await readFile(new URL("../dist/client/index.html", import.meta.url), "utf8");
   assert.match(html, /马梦圆/);
