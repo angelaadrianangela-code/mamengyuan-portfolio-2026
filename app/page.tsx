@@ -209,30 +209,30 @@ export default function Home() {
     <main>
       <div className="scrollProgress" ref={progressRef} aria-hidden="true" />
       <div className="cursorAura" ref={cursorRef} aria-hidden="true" />
+      <nav className="nav shell" aria-label="主导航">
+        <a className="monogram" href="#home" aria-label="返回首页" onClick={(event) => handleAnchorClick(event, "home")}>
+          M<span>·</span>MY
+        </a>
+        <div className="navLinks">
+          <a href="#about" onClick={(event) => handleAnchorClick(event, "about")}>关于我</a>
+          <a href="#work" onClick={(event) => handleAnchorClick(event, "work")}>项目</a>
+          <a href="#strengths" onClick={(event) => handleAnchorClick(event, "strengths")}>能力</a>
+        </div>
+        <button
+          className="contactPill"
+          type="button"
+          data-copy-value="13363038187"
+          data-copy-active={copiedValue === "13363038187"}
+          onClick={() => copyToClipboard("13363038187")}
+          aria-label="复制电话 13363038187"
+        >
+          {copiedValue === "13363038187" ? "已复制电话" : "联系我"} <span>↗</span>
+        </button>
+      </nav>
       <section className="hero" id="home">
         <img className="heroImage" src="/hero-ma-mengyuan.png" alt="" aria-hidden="true" />
         <div className="heroShade" />
         <div className="heroMesh" aria-hidden="true"><span /><span /><span /></div>
-        <nav className="nav shell" aria-label="主导航">
-          <a className="monogram" href="#home" aria-label="返回首页" onClick={(event) => handleAnchorClick(event, "home")}>
-            M<span>·</span>MY
-          </a>
-          <div className="navLinks">
-            <a href="#about" onClick={(event) => handleAnchorClick(event, "about")}>关于我</a>
-            <a href="#work" onClick={(event) => handleAnchorClick(event, "work")}>项目</a>
-            <a href="#strengths" onClick={(event) => handleAnchorClick(event, "strengths")}>能力</a>
-          </div>
-          <button
-            className="contactPill"
-            type="button"
-            data-copy-value="13363038187"
-            data-copy-active={copiedValue === "13363038187"}
-            onClick={() => copyToClipboard("13363038187")}
-            aria-label="复制电话 13363038187"
-          >
-            {copiedValue === "13363038187" ? "已复制电话" : "联系我"} <span>↗</span>
-          </button>
-        </nav>
 
         <div className="heroContent shell">
           <div className="heroEyebrow">

@@ -43,6 +43,10 @@ test("keeps primary navigation anchors always linkable", async () => {
 });
 
 test("keeps the navigation fixed above every section", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(source, /<main>[\s\S]*<nav className="nav shell"[\s\S]*<section className="hero"/);
+  assert.doesNotMatch(source, /<section className="hero" id="home">[\s\S]*<nav className="nav shell"/);
+
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /\.nav\s*{[\s\S]*position:\s*fixed/);
   assert.match(css, /\.nav\s*{[\s\S]*z-index:\s*1000/);
