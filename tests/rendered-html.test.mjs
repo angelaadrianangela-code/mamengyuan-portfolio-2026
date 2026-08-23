@@ -53,6 +53,8 @@ test("keeps the navigation fixed above every section", async () => {
   assert.match(css, /\.nav\s*{[\s\S]*z-index:\s*1000/);
   assert.match(css, /\.navLinks a\s*{[\s\S]*min-height:\s*44px/);
   assert.match(css, /\.navHidden\s*{[\s\S]*pointer-events:\s*none/);
+  assert.match(css, /\.navHidden\s*{[\s\S]*animation:\s*none !important/);
+  assert.match(css, /\.navHidden\s*{[\s\S]*visibility:\s*hidden/);
   assert.doesNotMatch(css, /\.nav\.isPinned/);
 });
 

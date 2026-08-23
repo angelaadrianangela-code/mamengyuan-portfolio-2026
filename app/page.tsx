@@ -121,6 +121,7 @@ export default function Home() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cursor = cursorRef.current;
     const progress = progressRef.current;
+    const footer = document.getElementById("contact");
 
     const onPointerMove = (event: PointerEvent) => {
       if (!cursor || event.pointerType === "touch") return;
@@ -131,6 +132,11 @@ export default function Home() {
     const onScroll = () => {
       const distance = document.documentElement.scrollHeight - window.innerHeight;
       if (progress) progress.style.transform = `scaleX(${distance > 0 ? window.scrollY / distance : 0})`;
+
+      if (footer) {
+        const footerRect = footer.getBoundingClientRect();
+        setIsFooterVisible(footerRect.top <= window.innerHeight * 0.86 && footerRect.bottom > 80);
+      }
     };
 
     const observer = reduceMotion
@@ -145,22 +151,12 @@ export default function Home() {
       else observer?.observe(element);
     });
 
-    const footer = document.getElementById("contact");
-    const footerObserver = footer
-      ? new IntersectionObserver(
-          ([entry]) => setIsFooterVisible(Boolean(entry?.isIntersecting)),
-          { threshold: 0.18 },
-        )
-      : null;
-    if (footer) footerObserver?.observe(footer);
-
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
     return () => {
       observer?.disconnect();
-      footerObserver?.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
     };

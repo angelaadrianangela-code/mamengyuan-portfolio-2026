@@ -159,13 +159,15 @@ img {
 }
 
 .navHidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -18px);
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none !important;
+  transform: translate(-50%, -18px) !important;
+  animation: none !important;
 }
 
 .navHidden * {
-  pointer-events: none;
+  pointer-events: none !important;
 }
 
 .monogram {
