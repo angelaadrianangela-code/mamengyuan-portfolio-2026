@@ -112,8 +112,18 @@ test("renders the certificate section below experience", async () => {
   assert.match(html, /Figma/);
   assert.match(html, /普通话二级甲等/);
   assert.match(html, /国家计算机二级/);
+  assert.match(html, /获奖/);
   assert.match(html, /米兰设计周非命题赛道省三等奖/);
-  assert.match(html, /全国大学生广告艺术大赛/);
+  assert.match(html, /全国大学生广告艺术大赛优秀奖/);
+  assert.match(html, /中国大学生广告艺术节学院奖 视频类优秀奖/);
+  assert.doesNotMatch(html, /全国大学生广告艺术大赛平面类省二等奖/);
+});
+
+test("renders the updated Schneider internship description", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /平面设计 · 品牌物料、活动 KV、画册展板与视频脚本、待办组件程序/);
 });
 
 test("renders the supplied high-resolution portrait", async () => {

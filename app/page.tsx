@@ -376,7 +376,7 @@ export default function Home() {
               <time>2026.04 — 08</time>
               <div>
                 <h4>施耐德万高（天津）电气有限公司</h4>
-                <p>平面设计 · 品牌物料、活动 KV、画册展板与视频脚本</p>
+                <p>平面设计 · 品牌物料、活动 KV、画册展板与视频脚本、待办组件程序</p>
               </div>
               <span>TIANJIN</span>
             </article>
@@ -407,11 +407,7 @@ export default function Home() {
             </article>
             <article>
               <span>03</span>
-              <p><strong>2026 年：</strong>米兰设计周非命题赛道省三等奖、米兰国际艺术设计大赛金奖、好创意暨全国数字艺术设计大赛省三等奖。</p>
-            </article>
-            <article>
-              <span>04</span>
-              <p><strong>2025 年：</strong>全国大学生广告艺术大赛平面类省二等奖、优秀奖，中国大学生广告艺术节学院奖视频类优秀奖。</p>
+              <p><strong>获奖：</strong>2026 年 米兰设计周非命题赛道省三等奖，米兰国际艺术设计大赛金奖，好创意暨全国数字艺术设计大赛省三等奖。2025 年 全国大学生广告艺术大赛优秀奖，中国大学生广告艺术节学院奖 视频类优秀奖。</p>
             </article>
           </div>
         </div>
