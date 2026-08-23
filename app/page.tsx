@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, MouseEvent } from "react";
 
 const projects = [
@@ -97,7 +97,25 @@ export default function Home() {
   const progressRef = useRef<HTMLDivElement>(null);
   const [copiedValue, setCopiedValue] = useState<string | null>(null);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
   const selectedProject = selectedProjectIndex === null ? null : projects[selectedProjectIndex];
+
+  useLayoutEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    if (window.location.hash) {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    const resetScroll = window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }), 0);
+
+    return () => {
+      window.clearTimeout(resetScroll);
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -126,12 +144,23 @@ export default function Home() {
       if (reduceMotion) element.classList.add("isVisible");
       else observer?.observe(element);
     });
+
+    const footer = document.getElementById("contact");
+    const footerObserver = footer
+      ? new IntersectionObserver(
+          ([entry]) => setIsFooterVisible(Boolean(entry?.isIntersecting)),
+          { threshold: 0.18 },
+        )
+      : null;
+    if (footer) footerObserver?.observe(footer);
+
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
     return () => {
       observer?.disconnect();
+      footerObserver?.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
     };
@@ -209,7 +238,7 @@ export default function Home() {
     <main>
       <div className="scrollProgress" ref={progressRef} aria-hidden="true" />
       <div className="cursorAura" ref={cursorRef} aria-hidden="true" />
-      <nav className="nav shell" aria-label="主导航">
+      <nav className={`nav shell${selectedProject || isFooterVisible ? " navHidden" : ""}`} aria-label="主导航">
         <a className="monogram" href="#home" aria-label="返回首页" onClick={(event) => handleAnchorClick(event, "home")}>
           M<span>·</span>MY
         </a>
@@ -294,20 +323,41 @@ export default function Home() {
             </p>
 
             <div className="contactRows">
-              <a href="tel:13363038187">
-                <span>PHONE</span>
-                <strong>133 6303 8187</strong>
-                <i>↗</i>
-              </a>
-              <a href="mailto:2921769497@qq.com">
-                <span>EMAIL</span>
-                <strong>2921769497@qq.com</strong>
-                <i>↗</i>
-              </a>
               <div>
-                <span>WECHAT</span>
-                <strong>my2921769497</strong>
-                <i>—</i>
+                <span>电话</span>
+                <strong>133 6303 8187</strong>
+                <button
+                  className="contactCopyButton"
+                  type="button"
+                  onClick={() => copyToClipboard("13363038187")}
+                  aria-label="复制电话 13363038187"
+                >
+                  {copiedValue === "13363038187" ? "✓" : "↗"}
+                </button>
+              </div>
+              <div>
+                <span>邮箱</span>
+                <strong>2921769497@qq.com</strong>
+                <button
+                  className="contactCopyButton"
+                  type="button"
+                  onClick={() => copyToClipboard("2921769497@qq.com")}
+                  aria-label="复制邮箱 2921769497@qq.com"
+                >
+                  {copiedValue === "2921769497@qq.com" ? "✓" : "↗"}
+                </button>
+              </div>
+              <div>
+                <span>微信</span>
+                <strong>my2921769</strong>
+                <button
+                  className="contactCopyButton"
+                  type="button"
+                  onClick={() => copyToClipboard("my2921769")}
+                  aria-label="复制微信 my2921769"
+                >
+                  {copiedValue === "my2921769" ? "✓" : "↗"}
+                </button>
               </div>
             </div>
           </div>
@@ -341,6 +391,31 @@ export default function Home() {
                 <p>品牌视觉设计 · SKICAT 产品图册、电商详情与 IP 方案</p>
               </div>
               <span>CHENGDE</span>
+            </article>
+          </div>
+        </div>
+
+        <div className="certificates" data-reveal>
+          <div className="experienceTitle">
+            <span>CERTIFICATES</span>
+            <h3>技能证书</h3>
+          </div>
+          <div className="certificateList">
+            <article>
+              <span>01</span>
+              <p><strong>设计与办公软件：</strong>Photoshop、Illustrator、Figma、剪映、Blender、AE、WPS、AI 工具（即梦、Codex、ChatGPT、Lovart、Gemini、TapNow 等）。</p>
+            </article>
+            <article>
+              <span>02</span>
+              <p><strong>证书：</strong>普通话二级甲等、国家计算机二级（WPS Office）。</p>
+            </article>
+            <article>
+              <span>03</span>
+              <p><strong>2026 年：</strong>米兰设计周非命题赛道省三等奖、米兰国际艺术设计大赛金奖、好创意暨全国数字艺术设计大赛省三等奖。</p>
+            </article>
+            <article>
+              <span>04</span>
+              <p><strong>2025 年：</strong>全国大学生广告艺术大赛平面类省二等奖、优秀奖，中国大学生广告艺术节学院奖视频类优秀奖。</p>
             </article>
           </div>
         </div>

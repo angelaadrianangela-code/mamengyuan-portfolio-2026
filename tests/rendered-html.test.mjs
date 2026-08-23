@@ -44,13 +44,15 @@ test("keeps primary navigation anchors always linkable", async () => {
 
 test("keeps the navigation fixed above every section", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(source, /<main>[\s\S]*<nav className="nav shell"[\s\S]*<section className="hero"/);
+  assert.match(source, /<main>[\s\S]*<nav className=\{`nav shell/);
   assert.doesNotMatch(source, /<section className="hero" id="home">[\s\S]*<nav className="nav shell"/);
+  assert.match(source, /selectedProject \|\| isFooterVisible \? " navHidden" : ""/);
 
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /\.nav\s*{[\s\S]*position:\s*fixed/);
   assert.match(css, /\.nav\s*{[\s\S]*z-index:\s*1000/);
   assert.match(css, /\.navLinks a\s*{[\s\S]*min-height:\s*44px/);
+  assert.match(css, /\.navHidden\s*{[\s\S]*pointer-events:\s*none/);
   assert.doesNotMatch(css, /\.nav\.isPinned/);
 });
 
@@ -75,12 +77,41 @@ test("renders the supplied full-screen hero artwork without the old overlay titl
   assert.doesNotMatch(html, /hero-video-art-healing\.mp4/);
 });
 
-test("renders copy actions for phone and email", async () => {
+test("renders simplified contact labels and copy actions", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /data-copy-value="13363038187"/);
-  assert.match(html, /data-copy-value="2921769497@qq\.com"/);
+  assert.match(html, />电话<\/span>/);
+  assert.match(html, />邮箱<\/span>/);
+  assert.match(html, />微信<\/span>/);
+  assert.match(html, /复制电话 13363038187/);
+  assert.match(html, /复制邮箱 2921769497@qq\.com/);
+  assert.match(html, /复制微信 my2921769/);
+  assert.match(html, /my2921769/);
+  assert.doesNotMatch(html, /my2921769497/);
+  assert.doesNotMatch(html, />PHONE<\/span>|>EMAIL<\/span>|>WECHAT<\/span>/);
+});
+
+test("starts new visits from the hero screen", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(source, /scrollRestoration = "manual"/);
+  assert.match(source, /window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/);
+  assert.match(source, /window\.location\.hash/);
+  assert.match(source, /window\.history\.replaceState/);
+});
+
+test("renders the certificate section below experience", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /技能证书/);
+  assert.match(html, /Photoshop/);
+  assert.match(html, /Illustrator/);
+  assert.match(html, /Figma/);
+  assert.match(html, /普通话二级甲等/);
+  assert.match(html, /国家计算机二级/);
+  assert.match(html, /米兰设计周非命题赛道省三等奖/);
+  assert.match(html, /全国大学生广告艺术大赛/);
 });
 
 test("renders the supplied high-resolution portrait", async () => {
