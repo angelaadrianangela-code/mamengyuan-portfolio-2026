@@ -46,7 +46,7 @@ test("keeps the navigation fixed above every section", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(source, /<main>[\s\S]*<nav className=\{`nav shell/);
   assert.doesNotMatch(source, /<section className="hero" id="home">[\s\S]*<nav className="nav shell"/);
-  assert.match(source, /selectedProject \|\| isFooterVisible \? " navHidden" : ""/);
+  assert.match(source, /selectedProject \|\| selectedVideo \|\| isFooterVisible \? " navHidden" : ""/);
 
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /\.nav\s*{[\s\S]*position:\s*fixed/);
@@ -190,22 +190,28 @@ test("renders the video project carousel with lazy covers and dedicated playback
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(html, /动态影像/);
+  assert.match(html, /AI动态影像/);
   assert.match(html, /“月河”艺术疗愈短片/);
   assert.match(html, /“五虎祯祥”周边动效设计/);
-  assert.match(html, /href="\/videos\/yuehe-art-healing\/"/);
   assert.match(html, /loading="lazy"/);
   assert.doesNotMatch(html, /<video/);
 
   assert.match(source, /videoRailRef/);
-  assert.match(source, /addEventListener\("wheel"/);
-  assert.match(source, /event\.preventDefault\(\)/);
+  assert.doesNotMatch(source, /addEventListener\("wheel"/);
+  assert.match(source, /scrollVideoRail/);
+  assert.match(source, /scrollBy\(\{ left: direction \* distance, behavior: "smooth" \}\)/);
+  assert.match(source, /setSelectedVideoIndex\(itemIndex % videoProjects\.length\)/);
+  assert.match(source, /关闭视频播放/);
+  assert.match(source, /播放上一个视频/);
+  assert.match(source, /播放下一个视频/);
   assert.match(source, /requestAnimationFrame\(animate\)/);
   assert.match(source, /\[\.\.\.videoProjects, \.\.\.videoProjects\]/);
 
   assert.match(css, /\.videoRail\s*{[\s\S]*overflow-x:\s*auto/);
   assert.match(css, /\.videoRail\s*{[\s\S]*scroll-snap-type:\s*x mandatory/);
+  assert.match(css, /\.videoRail\[data-auto="true"\]\s*{[\s\S]*scroll-snap-type:\s*none/);
   assert.match(css, /\.videoRail::-webkit-scrollbar\s*{[\s\S]*display:\s*none/);
+  assert.match(css, /\.videoRailControls button/);
   assert.match(css, /\.videoCard:hover img/);
 });
 

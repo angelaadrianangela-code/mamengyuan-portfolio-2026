@@ -102,8 +102,10 @@ export default function Home() {
   const videoResumeTimerRef = useRef<number | null>(null);
   const [copiedValue, setCopiedValue] = useState<string | null>(null);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const selectedProject = selectedProjectIndex === null ? null : projects[selectedProjectIndex];
+  const selectedVideo = selectedVideoIndex === null ? null : videoProjects[selectedVideoIndex];
 
   useLayoutEffect(() => {
     const previousScrollRestoration = window.history.scrollRestoration;
@@ -176,6 +178,7 @@ export default function Home() {
 
     const pause = () => {
       videoPausedRef.current = true;
+      rail.removeAttribute("data-auto");
       if (videoResumeTimerRef.current !== null) {
         window.clearTimeout(videoResumeTimerRef.current);
         videoResumeTimerRef.current = null;
@@ -186,6 +189,7 @@ export default function Home() {
       if (videoResumeTimerRef.current !== null) window.clearTimeout(videoResumeTimerRef.current);
       videoResumeTimerRef.current = window.setTimeout(() => {
         videoPausedRef.current = false;
+        rail.dataset.auto = "true";
         videoResumeTimerRef.current = null;
       }, delay);
     };
@@ -209,44 +213,43 @@ export default function Home() {
       videoAutoScrollRef.current = requestAnimationFrame(animate);
     };
 
-    const onWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-      event.preventDefault();
-      pause();
-      rail.scrollLeft += event.deltaY;
-      loopRail();
-      resumeSoon(1400);
-    };
-
     const onPointerDown = () => pause();
     const onPointerUp = () => resumeSoon(900);
     const onPointerEnter = () => pause();
     const onPointerLeave = () => resumeSoon(220);
+    const onFocusIn = () => pause();
+    const onFocusOut = () => resumeSoon(500);
 
-    rail.addEventListener("wheel", onWheel, { passive: false });
+    rail.dataset.auto = "true";
     rail.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointerup", onPointerUp);
     rail.addEventListener("pointerenter", onPointerEnter);
     rail.addEventListener("pointerleave", onPointerLeave);
+    rail.addEventListener("focusin", onFocusIn);
+    rail.addEventListener("focusout", onFocusOut);
     videoAutoScrollRef.current = requestAnimationFrame(animate);
 
     return () => {
       if (videoAutoScrollRef.current !== null) cancelAnimationFrame(videoAutoScrollRef.current);
       if (videoResumeTimerRef.current !== null) window.clearTimeout(videoResumeTimerRef.current);
-      rail.removeEventListener("wheel", onWheel);
       rail.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointerup", onPointerUp);
       rail.removeEventListener("pointerenter", onPointerEnter);
       rail.removeEventListener("pointerleave", onPointerLeave);
+      rail.removeEventListener("focusin", onFocusIn);
+      rail.removeEventListener("focusout", onFocusOut);
     };
   }, []);
 
   useEffect(() => {
-    if (selectedProjectIndex === null) return;
+    if (selectedProjectIndex === null && selectedVideoIndex === null) return;
 
     const previousOverflow = document.body.style.overflow;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelectedProjectIndex(null);
+      if (event.key === "Escape") {
+        setSelectedProjectIndex(null);
+        setSelectedVideoIndex(null);
+      }
     };
 
     document.body.style.overflow = "hidden";
@@ -256,13 +259,39 @@ export default function Home() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", closeOnEscape);
     };
-  }, [selectedProjectIndex]);
+  }, [selectedProjectIndex, selectedVideoIndex]);
 
   const changeProject = (direction: -1 | 1) => {
     setSelectedProjectIndex((current) => {
       if (current === null) return 0;
       return (current + direction + projects.length) % projects.length;
     });
+  };
+
+  const changeVideo = (direction: -1 | 1) => {
+    setSelectedVideoIndex((current) => {
+      if (current === null) return 0;
+      return (current + direction + videoProjects.length) % videoProjects.length;
+    });
+  };
+
+  const scrollVideoRail = (direction: -1 | 1) => {
+    const rail = videoRailRef.current;
+    if (!rail) return;
+
+    videoPausedRef.current = true;
+    rail.removeAttribute("data-auto");
+    if (videoResumeTimerRef.current !== null) window.clearTimeout(videoResumeTimerRef.current);
+
+    const card = rail.querySelector<HTMLElement>(".videoCard");
+    const distance = card ? card.getBoundingClientRect().width + 24 : rail.clientWidth * 0.7;
+    rail.scrollBy({ left: direction * distance, behavior: "smooth" });
+
+    videoResumeTimerRef.current = window.setTimeout(() => {
+      videoPausedRef.current = false;
+      rail.dataset.auto = "true";
+      videoResumeTimerRef.current = null;
+    }, 1800);
   };
 
   const moveProjectGlow = (event: MouseEvent<HTMLElement>) => {
@@ -313,7 +342,7 @@ export default function Home() {
     <main>
       <div className="scrollProgress" ref={progressRef} aria-hidden="true" />
       <div className="cursorAura" ref={cursorRef} aria-hidden="true" />
-      <nav className={`nav shell${selectedProject || isFooterVisible ? " navHidden" : ""}`} aria-label="主导航">
+      <nav className={`nav shell${selectedProject || selectedVideo || isFooterVisible ? " navHidden" : ""}`} aria-label="主导航">
         <a className="monogram" href="#home" aria-label="返回首页" onClick={(event) => handleAnchorClick(event, "home")}>
           M<span>·</span>MY
         </a>
@@ -539,17 +568,22 @@ export default function Home() {
         <div className="shell">
           <header className="sectionHead videoHead" data-reveal>
             <span>03 / VIDEO PROJECTS</span>
-            <h2>动态影像<sup>06</sup></h2>
+            <h2>AI动态影像<sup>06</sup></h2>
           </header>
         </div>
 
         <div className="videoRailWrap" data-reveal>
+          <div className="videoRailControls" aria-label="调节视频项目进度">
+            <button type="button" onClick={() => scrollVideoRail(-1)} aria-label="向左浏览视频项目">←</button>
+            <button type="button" onClick={() => scrollVideoRail(1)} aria-label="向右浏览视频项目">→</button>
+          </div>
           <div className="videoRail" ref={videoRailRef} aria-label="视频项目横向列表">
             {[...videoProjects, ...videoProjects].map((video, itemIndex) => (
-              <a
+              <button
                 className={`videoCard${video.fit === "contain" ? " videoCardContain" : ""}`}
-                href={`/videos/${video.slug}/`}
+                type="button"
                 key={`${video.slug}-${itemIndex}`}
+                onClick={() => setSelectedVideoIndex(itemIndex % videoProjects.length)}
                 aria-label={`播放 ${video.title}`}
                 aria-hidden={itemIndex >= videoProjects.length ? "true" : undefined}
                 tabIndex={itemIndex >= videoProjects.length ? -1 : 0}
@@ -563,7 +597,7 @@ export default function Home() {
                   <h3>{video.title}</h3>
                   <p>{video.type}</p>
                 </div>
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -593,6 +627,41 @@ export default function Home() {
             </header>
             <div className="projectReaderBody">
               <iframe src={`${selectedProject.pdf}#view=FitH&toolbar=1`} title={`${selectedProject.title} 项目 PDF`} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedVideo && (
+        <div
+          className="projectReader videoReader"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selectedVideo.title} 视频播放`}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setSelectedVideoIndex(null);
+          }}
+        >
+          <div className="projectReaderPanel videoReaderPanel" style={{ "--accent": "#d8ff58" } as CSSProperties}>
+            <header className="projectReaderHeader">
+              <div className="projectReaderIdentity">
+                <span>{selectedVideo.index} / VIDEO</span>
+                <strong>{selectedVideo.title}</strong>
+              </div>
+              <div className="projectReaderActions">
+                <button type="button" onClick={() => changeVideo(-1)} aria-label="播放上一个视频">← 上一个</button>
+                <button type="button" onClick={() => changeVideo(1)} aria-label="播放下一个视频">下一个 →</button>
+                <button className="projectReaderClose" type="button" onClick={() => setSelectedVideoIndex(null)} aria-label="关闭视频播放">关闭 ×</button>
+              </div>
+            </header>
+            <div className="videoReaderBody">
+              <video
+                src={selectedVideo.video}
+                poster={selectedVideo.cover}
+                controls
+                playsInline
+                preload="metadata"
+              />
             </div>
           </div>
         </div>
