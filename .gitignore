@@ -39,6 +39,7 @@ next-env.d.ts
 /dist/
 /.wrangler/
 /.pnpm-store/
+/.npm-cache/
 /tmp/
 /.devserver.log
 /.devserver.err.log

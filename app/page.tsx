@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, MouseEvent } from "react";
+import { videoProjects } from "./video-projects";
 
 const projects = [
   {
@@ -95,6 +96,10 @@ const strengths = [
 export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const videoRailRef = useRef<HTMLDivElement>(null);
+  const videoAutoScrollRef = useRef<number | null>(null);
+  const videoPausedRef = useRef(false);
+  const videoResumeTimerRef = useRef<number | null>(null);
   const [copiedValue, setCopiedValue] = useState<string | null>(null);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
@@ -159,6 +164,80 @@ export default function Home() {
       observer?.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const rail = videoRailRef.current;
+    if (!rail) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let previousTime = performance.now();
+
+    const pause = () => {
+      videoPausedRef.current = true;
+      if (videoResumeTimerRef.current !== null) {
+        window.clearTimeout(videoResumeTimerRef.current);
+        videoResumeTimerRef.current = null;
+      }
+    };
+
+    const resumeSoon = (delay = 1100) => {
+      if (videoResumeTimerRef.current !== null) window.clearTimeout(videoResumeTimerRef.current);
+      videoResumeTimerRef.current = window.setTimeout(() => {
+        videoPausedRef.current = false;
+        videoResumeTimerRef.current = null;
+      }, delay);
+    };
+
+    const loopRail = () => {
+      const loopWidth = rail.scrollWidth / 2;
+      if (loopWidth <= 0) return;
+      if (rail.scrollLeft >= loopWidth) rail.scrollLeft -= loopWidth;
+      if (rail.scrollLeft < 0) rail.scrollLeft += loopWidth;
+    };
+
+    const animate = (time: number) => {
+      const delta = Math.min(time - previousTime, 48);
+      previousTime = time;
+
+      if (!prefersReducedMotion && !videoPausedRef.current) {
+        rail.scrollLeft += delta * 0.026;
+        loopRail();
+      }
+
+      videoAutoScrollRef.current = requestAnimationFrame(animate);
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      event.preventDefault();
+      pause();
+      rail.scrollLeft += event.deltaY;
+      loopRail();
+      resumeSoon(1400);
+    };
+
+    const onPointerDown = () => pause();
+    const onPointerUp = () => resumeSoon(900);
+    const onPointerEnter = () => pause();
+    const onPointerLeave = () => resumeSoon(220);
+
+    rail.addEventListener("wheel", onWheel, { passive: false });
+    rail.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointerup", onPointerUp);
+    rail.addEventListener("pointerenter", onPointerEnter);
+    rail.addEventListener("pointerleave", onPointerLeave);
+    videoAutoScrollRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (videoAutoScrollRef.current !== null) cancelAnimationFrame(videoAutoScrollRef.current);
+      if (videoResumeTimerRef.current !== null) window.clearTimeout(videoResumeTimerRef.current);
+      rail.removeEventListener("wheel", onWheel);
+      rail.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointerup", onPointerUp);
+      rail.removeEventListener("pointerenter", onPointerEnter);
+      rail.removeEventListener("pointerleave", onPointerLeave);
     };
   }, []);
 
@@ -456,6 +535,40 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="videoShowcase section" id="video">
+        <div className="shell">
+          <header className="sectionHead videoHead" data-reveal>
+            <span>03 / VIDEO PROJECTS</span>
+            <h2>动态影像<sup>06</sup></h2>
+          </header>
+        </div>
+
+        <div className="videoRailWrap" data-reveal>
+          <div className="videoRail" ref={videoRailRef} aria-label="视频项目横向列表">
+            {[...videoProjects, ...videoProjects].map((video, itemIndex) => (
+              <a
+                className={`videoCard${video.fit === "contain" ? " videoCardContain" : ""}`}
+                href={`/videos/${video.slug}/`}
+                key={`${video.slug}-${itemIndex}`}
+                aria-label={`播放 ${video.title}`}
+                aria-hidden={itemIndex >= videoProjects.length ? "true" : undefined}
+                tabIndex={itemIndex >= videoProjects.length ? -1 : 0}
+              >
+                <figure>
+                  <img src={video.cover} alt={`${video.title} 封面`} loading="lazy" />
+                  <span className="videoIndex">{video.index}</span>
+                  <span className="playMark" aria-hidden="true">▶</span>
+                </figure>
+                <div className="videoInfo">
+                  <h3>{video.title}</h3>
+                  <p>{video.type}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {selectedProject && (
         <div
           className="projectReader"
@@ -487,7 +600,7 @@ export default function Home() {
 
       <section className="strengths shell section" id="strengths">
         <header className="sectionHead strengthHead" data-reveal>
-          <span>03 / STRENGTHS</span>
+          <span>04 / STRENGTHS</span>
           <h2>从想法到落地，<br />让每一步都<span>有依据。</span></h2>
         </header>
         <div className="strengthGrid">
@@ -507,7 +620,7 @@ export default function Home() {
       <footer className="footer" id="contact">
         <div className="footerGrid" aria-hidden="true" />
         <div className="shell footerInner">
-          <div className="footerTop"><span>04 / CONTACT</span><p>AVAILABLE FOR INTERNSHIP & COLLABORATION</p></div>
+          <div className="footerTop"><span>05 / CONTACT</span><p>AVAILABLE FOR INTERNSHIP & COLLABORATION</p></div>
           <div className="footerTitle"><span>LET&apos;S MAKE</span><span>SOMETHING <em>VIVID.</em></span></div>
           <div className="footerBottom">
             <div><p>有项目、实习机会或一个值得讨论的想法？</p><p>欢迎来信，我会尽快回复。</p></div>

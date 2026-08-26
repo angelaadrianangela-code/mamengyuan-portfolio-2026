@@ -38,7 +38,7 @@ test("keeps primary navigation anchors always linkable", async () => {
   assert.match(source, /window\.scrollTo\(\{/);
   assert.match(source, /behavior:\s*prefersReducedMotion \? "auto" : "smooth"/);
   assert.doesNotMatch(source, /scrollAnimationRef|scrollAbortRef|AbortController/);
-  assert.doesNotMatch(source, /addEventListener\("wheel"/);
+  assert.doesNotMatch(source, /window\.addEventListener\("wheel"/);
   assert.doesNotMatch(source, /isNavPinned|setIsNavPinned|scrollToAnchor/);
 });
 
@@ -181,4 +181,54 @@ test("wires all six project cards to accessible PDF detail readers", async () =>
   assert.doesNotMatch(source, /新窗口打开/);
   assert.doesNotMatch(source, /target="_blank"/);
   assert.match(source, /event\.key === "Escape"/);
+});
+
+test("renders the video project carousel with lazy covers and dedicated playback links", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(html, /动态影像/);
+  assert.match(html, /“月河”艺术疗愈短片/);
+  assert.match(html, /“五虎祯祥”周边动效设计/);
+  assert.match(html, /href="\/videos\/yuehe-art-healing\/"/);
+  assert.match(html, /loading="lazy"/);
+  assert.doesNotMatch(html, /<video/);
+
+  assert.match(source, /videoRailRef/);
+  assert.match(source, /addEventListener\("wheel"/);
+  assert.match(source, /event\.preventDefault\(\)/);
+  assert.match(source, /requestAnimationFrame\(animate\)/);
+  assert.match(source, /\[\.\.\.videoProjects, \.\.\.videoProjects\]/);
+
+  assert.match(css, /\.videoRail\s*{[\s\S]*overflow-x:\s*auto/);
+  assert.match(css, /\.videoRail\s*{[\s\S]*scroll-snap-type:\s*x mandatory/);
+  assert.match(css, /\.videoRail::-webkit-scrollbar\s*{[\s\S]*display:\s*none/);
+  assert.match(css, /\.videoCard:hover img/);
+});
+
+test("exports all video pages and public video assets", async () => {
+  const videos = [
+    ["yuehe-art-healing", "“月河”艺术疗愈短片"],
+    ["tianjin-jizhou", "天津蓟州区家乡宣传短片"],
+    ["huayang-1982-tvc", "“华洋1982”TVC短片"],
+    ["guardian-spirit-pearl", "“守护灵珠”动画短片"],
+    ["skicat-ip-animation", "“滑雪猫”IP动画短片"],
+    ["wuhu-motion-design", "“五虎祯祥”周边动效设计"],
+  ];
+
+  for (const [slug, title] of videos) {
+    const video = await stat(new URL(`../public/videos/${slug}.mp4`, import.meta.url));
+    const cover = await stat(new URL(`../public/videos/covers/${slug}.webp`, import.meta.url));
+    const page = await readFile(new URL(`../dist/client/videos/${slug}/index.html`, import.meta.url), "utf8");
+
+    assert.ok(video.size > 0);
+    assert.ok(video.size < 100 * 1024 * 1024);
+    assert.ok(cover.size > 0);
+    assert.match(page, new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.match(page, new RegExp(`/videos/${slug}\\.mp4`));
+    assert.match(page, /preload="metadata"/);
+  }
 });
