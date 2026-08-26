@@ -206,7 +206,7 @@ export default function Home() {
       previousTime = time;
 
       if (!prefersReducedMotion && !videoPausedRef.current) {
-        rail.scrollLeft += delta * 0.026;
+        rail.scrollLeft += delta * 0.055;
         loopRail();
       }
 
@@ -215,16 +215,12 @@ export default function Home() {
 
     const onPointerDown = () => pause();
     const onPointerUp = () => resumeSoon(900);
-    const onPointerEnter = () => pause();
-    const onPointerLeave = () => resumeSoon(220);
     const onFocusIn = () => pause();
     const onFocusOut = () => resumeSoon(500);
 
     rail.dataset.auto = "true";
     rail.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointerup", onPointerUp);
-    rail.addEventListener("pointerenter", onPointerEnter);
-    rail.addEventListener("pointerleave", onPointerLeave);
     rail.addEventListener("focusin", onFocusIn);
     rail.addEventListener("focusout", onFocusOut);
     videoAutoScrollRef.current = requestAnimationFrame(animate);
@@ -234,8 +230,6 @@ export default function Home() {
       if (videoResumeTimerRef.current !== null) window.clearTimeout(videoResumeTimerRef.current);
       rail.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointerup", onPointerUp);
-      rail.removeEventListener("pointerenter", onPointerEnter);
-      rail.removeEventListener("pointerleave", onPointerLeave);
       rail.removeEventListener("focusin", onFocusIn);
       rail.removeEventListener("focusout", onFocusOut);
     };

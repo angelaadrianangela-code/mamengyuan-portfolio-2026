@@ -199,7 +199,10 @@ test("renders the video project carousel with lazy covers and dedicated playback
   assert.match(source, /videoRailRef/);
   assert.doesNotMatch(source, /addEventListener\("wheel"/);
   assert.match(source, /scrollVideoRail/);
+  assert.match(source, /rail\.scrollLeft \+= delta \* 0\.055/);
   assert.match(source, /scrollBy\(\{ left: direction \* distance, behavior: "smooth" \}\)/);
+  assert.doesNotMatch(source, /pointerenter/);
+  assert.doesNotMatch(source, /pointerleave/);
   assert.match(source, /setSelectedVideoIndex\(itemIndex % videoProjects\.length\)/);
   assert.match(source, /关闭视频播放/);
   assert.match(source, /播放上一个视频/);
@@ -212,6 +215,8 @@ test("renders the video project carousel with lazy covers and dedicated playback
   assert.match(css, /\.videoRail\[data-auto="true"\]\s*{[\s\S]*scroll-snap-type:\s*none/);
   assert.match(css, /\.videoRail::-webkit-scrollbar\s*{[\s\S]*display:\s*none/);
   assert.match(css, /\.videoRailControls button/);
+  assert.match(css, /\.videoRailControls button\s*{[\s\S]*color:\s*var\(--acid\)/);
+  assert.match(css, /\.videoRailControls button:hover,[\s\S]*color:\s*#080909/);
   assert.match(css, /\.videoCard:hover img/);
 });
 

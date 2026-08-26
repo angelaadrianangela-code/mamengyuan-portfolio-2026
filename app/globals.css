@@ -868,15 +868,15 @@ img {
   height: 64px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(216, 255, 88, 0.46);
+  border: 1px solid rgba(216, 255, 88, 0.72);
   border-radius: 999px;
-  color: #080909;
+  color: var(--acid);
   background:
-    radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.7), transparent 22%),
-    var(--acid);
+    linear-gradient(180deg, rgba(216, 255, 88, 0.09), rgba(216, 255, 88, 0.035)),
+    rgba(9, 10, 10, 0.88);
   box-shadow:
     0 18px 56px rgba(0, 0, 0, 0.34),
-    0 0 34px rgba(216, 255, 88, 0.22);
+    inset 0 0 0 1px rgba(216, 255, 88, 0.12);
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
   font-size: 24px;
@@ -885,11 +885,14 @@ img {
 
 .videoRailControls button:hover,
 .videoRailControls button:focus-visible {
-  color: var(--acid);
+  color: #080909;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-    rgba(9, 10, 10, 0.92);
-  border-color: rgba(216, 255, 88, 0.8);
+    radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.68), transparent 22%),
+    var(--acid);
+  border-color: var(--acid);
+  box-shadow:
+    0 18px 56px rgba(0, 0, 0, 0.34),
+    0 0 34px rgba(216, 255, 88, 0.28);
   transform: translateY(-3px) scale(1.04);
 }
 
