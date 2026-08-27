@@ -357,7 +357,16 @@ export default function Home() {
         </button>
       </nav>
       <section className="hero" id="home">
-        <img className="heroImage" src="/hero-ma-mengyuan.png" alt="" aria-hidden="true" />
+        <img
+          className="heroImage"
+          src="/hero-ma-mengyuan.webp"
+          alt=""
+          aria-hidden="true"
+          width={1672}
+          height={941}
+          decoding="async"
+          fetchPriority="high"
+        />
         <div className="heroShade" />
         <div className="heroMesh" aria-hidden="true"><span /><span /><span /></div>
 
@@ -401,7 +410,14 @@ export default function Home() {
         <div className="aboutGrid" data-reveal>
           <figure className="portraitCard">
             <div className="portraitGlow" />
-            <img src="/assets/portrait-mamengyuan-v3.png" alt="马梦圆肖像" />
+            <img
+              src="/assets/portrait-mamengyuan-v4.webp"
+              alt="马梦圆肖像"
+              width={1500}
+              height={2097}
+              loading="lazy"
+              decoding="async"
+            />
             <figcaption>
               <span>MA MENGYUAN</span>
               <span>VISUAL DESIGNER</span>
@@ -542,7 +558,7 @@ export default function Home() {
                 data-reveal
               >
                 <div className={`projectMedia${project.fit === "contain" ? " projectMediaContain" : ""}`}>
-                  <img src={project.image} alt={`${project.title} 项目展示`} loading="lazy" />
+                  <img src={project.image} alt={`${project.title} 项目展示`} loading="lazy" decoding="async" />
                   <span className="projectIndex">{project.index}</span>
                   <span className="viewMark">VIEW CASE ↗</span>
                 </div>
@@ -583,7 +599,7 @@ export default function Home() {
                 tabIndex={itemIndex >= videoProjects.length ? -1 : 0}
               >
                 <figure>
-                  <img src={video.cover} alt={`${video.title} 封面`} loading="lazy" />
+                  <img src={video.cover} alt={`${video.title} 封面`} loading="lazy" decoding="async" />
                   <span className="videoIndex">{video.index}</span>
                   <span className="playMark" aria-hidden="true">▶</span>
                 </figure>

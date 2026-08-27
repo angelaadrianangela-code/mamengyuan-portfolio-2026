@@ -73,7 +73,9 @@ test("renders the supplied full-screen hero artwork without the old overlay titl
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /\/hero-ma-mengyuan\.png/);
+  assert.match(html, /\/hero-ma-mengyuan\.webp/);
+  assert.match(html, /fetchPriority="high"/);
+  assert.doesNotMatch(html, /\/hero-ma-mengyuan\.png/);
   assert.doesNotMatch(html, /<i>MENGYUAN<\/i>/);
   assert.doesNotMatch(html, /<video/);
   assert.doesNotMatch(html, /hero-video-art-healing\.mp4/);
@@ -130,9 +132,25 @@ test("renders the supplied high-resolution portrait", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /\/assets\/portrait-mamengyuan-v3\.png/);
+  assert.match(html, /\/assets\/portrait-mamengyuan-v4\.webp/);
+  assert.match(html, /loading="lazy"/);
+  assert.match(html, /decoding="async"/);
+  assert.doesNotMatch(html, /\/assets\/portrait-mamengyuan-v3\.png/);
   assert.doesNotMatch(html, /\/assets\/portrait-mamengyuan-v2\.png/);
   assert.doesNotMatch(html, /\/assets\/portrait-cutout\.png/);
+});
+
+test("uses compressed image assets and long-lived cache headers", async () => {
+  const hero = await stat(new URL("../public/hero-ma-mengyuan.webp", import.meta.url));
+  const portrait = await stat(new URL("../public/assets/portrait-mamengyuan-v4.webp", import.meta.url));
+  const headers = await readFile(new URL("../public/_headers", import.meta.url), "utf8");
+
+  assert.ok(hero.size < 120 * 1024);
+  assert.ok(portrait.size < 500 * 1024);
+  assert.match(headers, /\/assets\/\*/);
+  assert.match(headers, /Cache-Control: public, max-age=31536000, immutable/);
+  assert.match(headers, /\/videos\/covers\/\*/);
+  assert.match(headers, /\/videos\/\*\.mp4/);
 });
 
 test("renders the new LANYE cover in project 05", async () => {
