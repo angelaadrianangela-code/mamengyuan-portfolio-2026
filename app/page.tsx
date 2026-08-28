@@ -558,7 +558,15 @@ export default function Home() {
                 data-reveal
               >
                 <div className={`projectMedia${project.fit === "contain" ? " projectMediaContain" : ""}`}>
-                  <img src={project.image} alt={`${project.title} 项目展示`} loading="lazy" decoding="async" />
+                  <img
+                    src={project.image}
+                    alt={`${project.title} 项目展示`}
+                    width={1200}
+                    height={800}
+                    loading={projectIndex < 3 ? "eager" : "lazy"}
+                    fetchPriority={projectIndex < 3 ? "high" : "auto"}
+                    decoding="async"
+                  />
                   <span className="projectIndex">{project.index}</span>
                   <span className="viewMark">VIEW CASE ↗</span>
                 </div>
@@ -599,7 +607,14 @@ export default function Home() {
                 tabIndex={itemIndex >= videoProjects.length ? -1 : 0}
               >
                 <figure>
-                  <img src={video.cover} alt={`${video.title} 封面`} loading="lazy" decoding="async" />
+                  <img
+                    src={video.cover}
+                    alt={`${video.title} 封面`}
+                    width={1200}
+                    height={675}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span className="videoIndex">{video.index}</span>
                   <span className="playMark" aria-hidden="true">▶</span>
                 </figure>

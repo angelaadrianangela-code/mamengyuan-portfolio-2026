@@ -20,5 +20,29 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="zh-CN"><body>{children}</body></html>;
+  const imagePreloads = [
+    "/hero-ma-mengyuan.webp",
+    "/assets/portrait-mamengyuan-v4.webp",
+    "/assets/project-momopet.webp",
+    "/assets/project-ui.webp",
+    "/assets/project-wuhu-cover.webp",
+    "/assets/project-cafe.webp",
+    "/assets/project-lanye-cover.webp",
+    "/assets/project-skicat.webp",
+    "/videos/covers/yuehe-art-healing.webp",
+    "/videos/covers/tianjin-jizhou.webp",
+    "/videos/covers/huayang-1982-tvc.webp",
+    "/videos/covers/guardian-spirit-pearl.webp",
+    "/videos/covers/skicat-ip-animation.webp",
+    "/videos/covers/wuhu-motion-design.webp",
+  ];
+
+  return (
+    <html lang="zh-CN">
+      <head>
+        {imagePreloads.map((href) => <link key={href} rel="preload" as="image" href={href} />)}
+      </head>
+      <body>{children}</body>
+    </html>
+  );
 }
