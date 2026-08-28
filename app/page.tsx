@@ -563,8 +563,8 @@ export default function Home() {
                     alt={`${project.title} 项目展示`}
                     width={1200}
                     height={800}
-                    loading={projectIndex < 3 ? "eager" : "lazy"}
-                    fetchPriority={projectIndex < 3 ? "high" : "auto"}
+                    loading="eager"
+                    fetchPriority="high"
                     decoding="async"
                   />
                   <span className="projectIndex">{project.index}</span>
@@ -612,7 +612,8 @@ export default function Home() {
                     alt={`${video.title} 封面`}
                     width={1200}
                     height={675}
-                    loading="lazy"
+                    loading="eager"
+                    fetchPriority="high"
                     decoding="async"
                   />
                   <span className="videoIndex">{video.index}</span>
