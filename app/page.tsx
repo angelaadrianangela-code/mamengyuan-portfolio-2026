@@ -718,7 +718,7 @@ export default function Home() {
           <div className="footerTop"><span>05 / CONTACT</span><p>AVAILABLE FOR INTERNSHIP & COLLABORATION</p></div>
           <div className="footerTitle"><span>LET&apos;S MAKE</span><span>SOMETHING <em>VIVID.</em></span></div>
           <div className="footerBottom">
-            <div><p>有项目、实习机会或一个值得讨论的想法？</p><p>欢迎来信，我会尽快回复。</p></div>
+            <div><p>有工作机会、项目或一个值得讨论的想法?</p><p>欢迎来信，我会尽快回复。</p></div>
             <button
               className="mailButton"
               type="button"
