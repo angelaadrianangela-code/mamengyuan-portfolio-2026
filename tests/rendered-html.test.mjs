@@ -115,10 +115,45 @@ test("renders the certificate section below experience", async () => {
   assert.match(html, /普通话二级甲等/);
   assert.match(html, /国家计算机二级/);
   assert.match(html, /获奖/);
-  assert.match(html, /米兰设计周非命题赛道省三等奖/);
-  assert.match(html, /全国大学生广告艺术大赛优秀奖/);
+  assert.match(html, /米兰设计周：非命题赛道 省三等奖/);
+  assert.match(html, /全国大学生广告艺术大赛 平面广告类优秀奖/);
   assert.match(html, /中国大学生广告艺术节学院奖 视频类优秀奖/);
   assert.doesNotMatch(html, /全国大学生广告艺术大赛平面类省二等奖/);
+  assert.match(html, /华夏奖文化艺术设计大赛：视觉传达类 国家级银奖/);
+  assert.match(html, /米兰设计周：非命题赛道 省三等奖/);
+  assert.match(html, /未来设计师：文创设计赛道 省级三等奖/);
+  assert.match(html, /好创意全国设计大赛：视传应用类 省级优秀奖/);
+  assert.match(html, /全国大学生广告艺术大赛 平面广告类优秀奖/);
+});
+
+test("places all requested PDF projects in the selected-work order", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const expected = [
+    ["盒马&amp;认养一头牛联名KV", "/projects/07-hema-niuyang.pdf"],
+    ["MOMO PET品牌国际小狗节活动主视觉", "/projects/08-momo-pet-dog-day.pdf"],
+    ["MOMO PET", "/projects/01-momopet.pdf"],
+    ["拾光 SHIGUANG", "/projects/02-shiguang.pdf"],
+    ["五虎祯祥", "/projects/03-wuhu.pdf"],
+    ["幻唐志 雪千寻角色Q版设计及banner图设计", "/projects/09-xuetang-xueqian.pdf"],
+    ["上岛 · 咖啡", "/projects/04-shangdao-cafe.pdf"],
+    ["兰也 LANYE", "/projects/05-lanye.pdf"],
+    ["SKICAT", "/projects/06-skicat.pdf"],
+    ["施耐德万高H5及海报邀请函设计", "/projects/10-schneider-wanguo.pdf"],
+  ];
+
+  let previous = -1;
+  for (const [title, pdf] of expected) {
+    const titleAt = html.indexOf(`<h3>${title}</h3>`);
+    assert.ok(titleAt > previous, `${title} should follow the requested order`);
+    assert.match(source, new RegExp(pdf.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    previous = titleAt;
+    const file = await stat(new URL(`../public${pdf}`, import.meta.url));
+    assert.ok(file.size > 0);
+  }
+  assert.match(html, /精选项目<sup>10<\/sup>/);
 });
 
 test("renders the updated Schneider internship description", async () => {
@@ -176,15 +211,19 @@ test("removes the campus media center experience", async () => {
   assert.doesNotMatch(html, /CAMPUS/);
 });
 
-test("wires all six project cards to accessible PDF detail readers", async () => {
+test("wires all project cards to accessible PDF detail readers", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const pdfFiles = [
+    "07-hema-niuyang.pdf",
+    "08-momo-pet-dog-day.pdf",
     "01-momopet.pdf",
     "02-shiguang.pdf",
     "03-wuhu.pdf",
+    "09-xuetang-xueqian.pdf",
     "04-shangdao-cafe.pdf",
     "05-lanye.pdf",
     "06-skicat.pdf",
+    "10-schneider-wanguo.pdf",
   ];
 
   for (const filename of pdfFiles) {

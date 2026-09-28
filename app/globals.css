@@ -666,10 +666,12 @@ img {
 }
 
 .projectGrid {
+  width: min(100%, 1480px);
+  margin-inline: auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 100px 30px;
-  padding-top: 100px;
+  gap: 112px 42px;
+  padding: 94px 28px 0;
 }
 
 .projectCard:nth-child(even) {
@@ -678,9 +680,10 @@ img {
 
 .projectMedia {
   position: relative;
-  aspect-ratio: 1.42;
+  aspect-ratio: 1.52;
   overflow: hidden;
   background: #161717;
+  border-radius: 14px;
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.34);
 }
 
@@ -757,8 +760,8 @@ img {
 .projectInfo {
   display: flex;
   justify-content: space-between;
-  gap: 30px;
-  padding-top: 24px;
+  gap: 22px;
+  padding: 20px 8px 0;
   border-top: 3px solid var(--accent);
 }
 

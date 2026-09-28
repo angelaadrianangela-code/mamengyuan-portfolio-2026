@@ -7,6 +7,26 @@ import { videoProjects } from "./video-projects";
 const projects = [
   {
     index: "01",
+    title: "盒马&认养一头牛联名KV",
+    subtitle: "联名品牌活动主视觉与系列 KV 设计",
+    tags: ["CAMPAIGN KV", "BRAND COLLAB", "VISUAL DESIGN"],
+    image: "/assets/project-hema-cover.webp",
+    pdf: "/projects/07-hema-niuyang.pdf",
+    fit: "contain",
+    accent: "#ff6c5f",
+  },
+  {
+    index: "02",
+    title: "MOMO PET品牌国际小狗节活动主视觉",
+    subtitle: "宠物品牌节日活动主视觉设计",
+    tags: ["CAMPAIGN VISUAL", "IP DESIGN", "BRAND SYSTEM"],
+    image: "/assets/project-momo-dog-day-cover.webp",
+    pdf: "/projects/08-momo-pet-dog-day.pdf",
+    fit: "contain",
+    accent: "#d7ff59",
+  },
+  {
+    index: "03",
     title: "MOMO PET",
     subtitle: "宠物生活方式品牌视觉识别系统",
     tags: ["BRAND IDENTITY", "IP DESIGN", "VISUAL SYSTEM"],
@@ -15,7 +35,7 @@ const projects = [
     accent: "#ff6c5f",
   },
   {
-    index: "02",
+    index: "04",
     title: "拾光 SHIGUANG",
     subtitle: "临期食品服务平台 UI / IP 设计",
     tags: ["UI DESIGN", "PRODUCT", "IP DESIGN"],
@@ -24,7 +44,7 @@ const projects = [
     accent: "#d7ff59",
   },
   {
-    index: "03",
+    index: "05",
     title: "五虎祯祥",
     subtitle: "非物质文化遗产视觉文创设计",
     tags: ["CULTURAL IP", "PACKAGING", "AIGC"],
@@ -34,7 +54,17 @@ const projects = [
     accent: "#ff4c70",
   },
   {
-    index: "04",
+    index: "06",
+    title: "幻唐志 雪千寻角色Q版设计及banner图设计",
+    subtitle: "角色 Q 版视觉与活动 Banner 设计",
+    tags: ["CHARACTER DESIGN", "BANNER", "IP VISUAL"],
+    image: "/assets/project-xueqian-cover.webp",
+    pdf: "/projects/09-xuetang-xueqian.pdf",
+    fit: "contain",
+    accent: "#e9b35b",
+  },
+  {
+    index: "07",
     title: "上岛 · 咖啡",
     subtitle: "咖啡品牌与线下空间视觉体验",
     tags: ["BRANDING", "RETAIL", "VISUAL IDENTITY"],
@@ -43,7 +73,7 @@ const projects = [
     accent: "#b4825e",
   },
   {
-    index: "05",
+    index: "08",
     title: "兰也 LANYE",
     subtitle: "轻奢美妆品牌视觉识别系统",
     tags: ["VI SYSTEM", "RETAIL", "BEAUTY"],
@@ -52,13 +82,23 @@ const projects = [
     accent: "#d6b16b",
   },
   {
-    index: "06",
+    index: "09",
     title: "SKICAT",
     subtitle: "滑雪品牌产品视觉与电商设计",
     tags: ["E-COMMERCE", "ART DIRECTION", "LAYOUT"],
     image: "/assets/project-skicat.webp",
     pdf: "/projects/06-skicat.pdf",
     accent: "#f45e43",
+  },
+  {
+    index: "10",
+    title: "施耐德万高H5及海报邀请函设计",
+    subtitle: "企业活动 H5、海报与邀请函视觉设计",
+    tags: ["H5 DESIGN", "POSTER", "EVENT VISUAL"],
+    image: "/assets/project-schneider-cover.webp",
+    pdf: "/projects/10-schneider-wanguo.pdf",
+    fit: "contain",
+    accent: "#8de0c4",
   },
 ];
 
@@ -481,7 +521,7 @@ export default function Home() {
           <div><strong>21</strong><span>页产品图册独立设计</span></div>
           <div><strong>18%</strong><span>详情页点击率提升</span></div>
           <div><strong>TOP 15%</strong><span>专业成绩排名</span></div>
-          <div><strong>06</strong><span>精选项目系统</span></div>
+          <div><strong>10</strong><span>精选项目系统</span></div>
         </div>
 
         <div className="experience" data-reveal>
@@ -525,7 +565,7 @@ export default function Home() {
             </article>
             <article>
               <span>03</span>
-              <p><strong>获奖：</strong>2026 年 米兰设计周非命题赛道省三等奖，米兰国际艺术设计大赛金奖，好创意暨全国数字艺术设计大赛省三等奖。2025 年 全国大学生广告艺术大赛优秀奖，中国大学生广告艺术节学院奖 视频类优秀奖。</p>
+              <p><strong>获奖：</strong>华夏奖文化艺术设计大赛：视觉传达类 国家级银奖<br />米兰设计周：非命题赛道 省三等奖<br />未来设计师：文创设计赛道 省级三等奖<br />好创意全国设计大赛：视传应用类 省级优秀奖<br />全国大学生广告艺术大赛 平面广告类优秀奖<br />中国大学生广告艺术节学院奖 视频类优秀奖。</p>
             </article>
           </div>
         </div>
@@ -535,7 +575,7 @@ export default function Home() {
         <div className="shell">
           <header className="sectionHead workHead" data-reveal>
             <span>02 / SELECTED WORK</span>
-            <h2>精选项目<sup>06</sup></h2>
+            <h2>精选项目<sup>10</sup></h2>
           </header>
 
           <div className="projectGrid">
@@ -563,8 +603,8 @@ export default function Home() {
                     alt={`${project.title} 项目展示`}
                     width={1200}
                     height={800}
-                    loading="eager"
-                    fetchPriority="high"
+                    loading={projectIndex < 2 ? "eager" : "lazy"}
+                    fetchPriority={projectIndex < 2 ? "high" : "auto"}
                     decoding="async"
                   />
                   <span className="projectIndex">{project.index}</span>
