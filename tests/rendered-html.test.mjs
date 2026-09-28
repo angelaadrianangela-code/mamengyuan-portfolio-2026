@@ -156,6 +156,22 @@ test("places all requested PDF projects in the selected-work order", async () =>
   assert.match(html, /精选项目<sup>10<\/sup>/);
 });
 
+test("uses the supplied preview artwork for projects 01, 02, 06, and 10", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  for (const asset of [
+    "/assets/project-hema-kv.webp",
+    "/assets/project-momo-dog-kv.webp",
+    "/assets/project-xueqian-banner.webp",
+    "/assets/project-schneider-kv.webp",
+  ]) {
+    assert.match(html, new RegExp(asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    const file = await stat(new URL(`../public${asset}`, import.meta.url));
+    assert.ok(file.size > 0);
+  }
+});
+
 test("renders the updated Schneider internship description", async () => {
   const response = await render();
   assert.equal(response.status, 200);
