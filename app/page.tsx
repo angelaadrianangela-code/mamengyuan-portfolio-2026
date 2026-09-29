@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, MouseEvent } from "react";
 import { videoProjects } from "./video-projects";
+import { PdfViewer } from "./pdf-viewer";
 
 const projects = [
   {
@@ -692,7 +693,7 @@ export default function Home() {
               </div>
             </header>
             <div className="projectReaderBody">
-              <iframe src={`${selectedProject.pdf}#view=FitH&toolbar=1`} title={`${selectedProject.title} 项目 PDF`} />
+              <PdfViewer src={selectedProject.pdf} title={selectedProject.title} />
             </div>
           </div>
         </div>

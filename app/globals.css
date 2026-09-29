@@ -1799,19 +1799,36 @@ body {
 
 .projectReaderBody {
   min-height: 0;
+  overflow: auto;
   padding: 12px;
   background:
     radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 38%),
     #111212;
 }
 
-.projectReaderBody iframe {
-  width: 100%;
-  height: 100%;
+.pdfViewer {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 2px;
+}
+
+.pdfViewer canvas {
   display: block;
-  border: 0;
-  border-radius: 10px;
-  background: #202121;
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+}
+
+.pdfViewerStatus {
+  margin: auto;
+  padding: 40px 18px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 14px;
 }
 
 @keyframes readerFade {

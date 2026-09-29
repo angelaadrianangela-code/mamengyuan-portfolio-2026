@@ -250,10 +250,20 @@ test("wires all project cards to accessible PDF detail readers", async () => {
 
   assert.match(source, /role="dialog"/);
   assert.match(source, /aria-modal="true"/);
-  assert.match(source, /<iframe/);
+  assert.match(source, /<PdfViewer/);
+  assert.match(source, /from "\.\/pdf-viewer"/);
+  assert.doesNotMatch(source, /<iframe[^>]+selectedProject\.pdf/);
   assert.doesNotMatch(source, /新窗口打开/);
   assert.doesNotMatch(source, /target="_blank"/);
   assert.match(source, /event\.key === "Escape"/);
+});
+
+test("renders project PDFs inside the site for mobile browsers", async () => {
+  const source = await readFile(new URL("../app/pdf-viewer.tsx", import.meta.url), "utf8");
+  assert.match(source, /getDocument/);
+  assert.match(source, /canvas/);
+  assert.match(source, /pdf\.numPages/);
+  assert.match(source, /loading/);
 });
 
 test("renders the video project carousel with lazy covers and dedicated playback links", async () => {
