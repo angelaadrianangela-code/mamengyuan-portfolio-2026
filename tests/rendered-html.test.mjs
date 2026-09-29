@@ -264,6 +264,11 @@ test("renders project PDFs inside the site for mobile browsers", async () => {
   assert.match(source, /canvas/);
   assert.match(source, /pdf\.numPages/);
   assert.match(source, /loading/);
+  assert.match(source, /pdfViewerToolbar/);
+  assert.match(source, /上一页/);
+  assert.match(source, /下一页/);
+  assert.match(source, /IntersectionObserver/);
+  assert.match(source, /rotation/);
 });
 
 test("renders the video project carousel with lazy covers and dedicated playback links", async () => {
