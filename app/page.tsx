@@ -17,6 +17,7 @@ export default function Home() {
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
   const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [awardsExpanded, setAwardsExpanded] = useState(false);
   const selectedProject = selectedProjectIndex === null ? null : projects[selectedProjectIndex];
   const selectedVideo = selectedVideoIndex === null ? null : videoProjects[selectedVideoIndex];
 
@@ -400,13 +401,20 @@ export default function Home() {
           </div>
         </div>
 
-        <section className="awards" id="awards" aria-labelledby="awards-title">
+        <section className="awards" id="awards" aria-labelledby="awards-title" data-expanded={awardsExpanded}>
           <header className="awardsHeading" data-reveal>
             <span>03 / AWARDS</span>
             <h3 id="awards-title">获奖</h3>
+            <button className="awardsToggle" type="button" aria-expanded={awardsExpanded}
+              aria-controls="awards-details" aria-label={awardsExpanded ? "收起获奖详情" : "展开获奖详情"}
+              onClick={() => setAwardsExpanded((expanded) => !expanded)}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
             <p>SELECTED HONORS</p>
           </header>
-          <div className="awardsList">
+          <div className="awardsList" id="awards-details">
             {[
               ["华夏奖文化艺术设计大赛", "视觉传达类", "国家级银奖"],
               ["米兰设计周", "非命题赛道", "省三等奖"],
@@ -593,7 +601,7 @@ export default function Home() {
         <div className="footerGrid" aria-hidden="true" />
         <div className="shell footerInner">
           <div className="footerTop"><span>05 / CONTACT</span><p>AVAILABLE FOR INTERNSHIP & COLLABORATION</p></div>
-          <div className="footerTitle"><span>LET&apos;S MAKE</span><span>SOMETHING <em>VIVID.</em></span></div>
+          <div className="footerTitle"><span>LET&apos;S MAKE</span><span><span className="footerSomething">SOMETHING</span>{" "}<em>VIVID.</em></span></div>
           <div className="footerBottom">
             <div><p>有工作机会、项目或一个值得讨论的想法?</p><p>欢迎来信，我会尽快回复。</p></div>
             <button

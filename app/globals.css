@@ -1822,6 +1822,8 @@ body {
   width: 100%;
   height: 100%;
   display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
   color: #f1f2ee;
@@ -1833,6 +1835,7 @@ body {
 }
 
 .projectReaderHeader {
+  min-width: 0;
   min-height: 82px;
   display: flex;
   align-items: center;
@@ -1901,6 +1904,7 @@ body {
 }
 
 .projectReaderBody {
+  min-width: 0;
   min-height: 0;
   width: 100%;
   box-sizing: border-box;
@@ -2141,4 +2145,30 @@ body :where(h1, h2, h3, h4, p, span, a, button, strong, li, time, footer, figcap
   .cursorAura { display: none; }
   .projectReader,
   .projectReaderPanel { animation: none; }
+}
+
+.awardsToggle { display: none; }
+@media (max-width: 760px) {
+  .projectReader { width: 100%; max-width: 100vw; padding: 0; }
+  .projectReaderPanel { width: 100%; max-width: 100%; min-width: 0; border: 0; border-radius: 0; }
+  .projectReaderHeader { min-height: 0; width: 100%; flex-direction: column; align-items: stretch; gap: 12px; padding: 14px 12px; }
+  .projectReaderIdentity { width: 100%; min-width: 0; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .projectReaderIdentity strong { width: 100%; min-width: 0; font-size: 14px; line-height: 1.5; letter-spacing: 0; white-space: normal; overflow: visible; overflow-wrap: anywhere; }
+  .projectReaderActions { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0; overflow: visible; }
+  .projectReaderActions button { min-width: 0; min-height: 36px; padding-inline: 6px; font-size: 11px; }
+  .projectReaderBody { width: 100%; max-width: 100%; min-width: 0; padding: 0; }
+  .artworkDetail { width: 100%; max-width: 100%; min-width: 0; margin-inline: auto; }
+  .artworkDetail img { width: 100%; max-width: 100%; height: auto; margin: 0; }
+  .footerTitle { width: 100%; min-width: 0; max-width: 100%; font-size: clamp(36px, 13.5vw, 82px); line-height: 1.04; letter-spacing: -0.045em; padding-block: 48px; text-align: left; }
+  .footerTitle > span, .footerTitle > span:last-child { text-align: left; }
+  .footerTitle .footerSomething, .footerTitle em { display: block; }
+  .footer:hover .footerTitle > span:first-child, .footer:hover .footerTitle > span:last-child { transform: none; }
+  .footerMeta { flex-wrap: wrap; gap: 16px; line-height: 1.5; }
+  .awardsHeading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+  .awardsHeading > span, .awardsHeading > p { grid-column: 1 / -1; margin: 0; }
+  .awardsHeading h3 { grid-column: 1; grid-row: 2; margin: 0; }
+  .awardsToggle { grid-column: 2; grid-row: 2; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; color: var(--acid); background: transparent; }
+  .awardsToggle:focus-visible { outline: 2px solid var(--acid); outline-offset: 4px; }
+  .awardsToggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .awards[data-expanded="false"] .awardsList { display: none; }
 }

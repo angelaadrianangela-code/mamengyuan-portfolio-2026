@@ -144,6 +144,21 @@ test("renders all six artworks in upload order", async () => {
   assert.doesNotMatch(html, /精选项目|拾光 SHIGUANG|兰也 LANYE|幻唐志/);
 });
 
+test("starts mobile awards collapsed with an accessible disclosure control", async () => {
+  const html = await (await render()).text();
+  assert.match(html, /id="awards"[^>]*data-expanded="false"/);
+  assert.match(html, /class="awardsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="awards-details"/);
+  assert.match(html, /id="awards-details"/);
+  assert.equal((html.match(/class="awardRow"/g) || []).length, 6);
+});
+
+test("preserves the footer message with explicit mobile line boundaries", async () => {
+  const html = await (await render()).text();
+  assert.match(html, /LET&#x27;S MAKE|LET'S MAKE/);
+  assert.match(html, /class="footerSomething">SOMETHING<\/span>/);
+  assert.match(html, /<em>VIVID\.<\/em>/);
+});
+
 test("loads all six supplied covers at their native proportions", async () => {
   const html = await (await render()).text();
   for (let i = 1; i <= 6; i++) {
