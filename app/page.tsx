@@ -490,7 +490,7 @@ export default function Home() {
         <section className="awards" id="awards" aria-labelledby="awards-title">
           <header className="awardsHeading" data-reveal>
             <span>03 / AWARDS</span>
-            <h3 id="awards-title">获奖<span>与认可</span></h3>
+            <h3 id="awards-title">获奖</h3>
             <p>SELECTED HONORS</p>
           </header>
           <div className="awardsList">
