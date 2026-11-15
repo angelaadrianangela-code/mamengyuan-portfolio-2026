@@ -103,37 +103,6 @@ const projects = [
   },
 ];
 
-const strengths = [
-  {
-    no: "A",
-    title: "品牌视觉系统",
-    en: "Brand Systems",
-    text: "从品牌概念、标志规范到应用落地，把分散触点组织成有识别度的完整视觉语言。",
-    tools: "PS · AI · FIGMA",
-  },
-  {
-    no: "B",
-    title: "UI 与体验设计",
-    en: "Digital Experience",
-    text: "兼顾信息层级、用户路径与品牌表达，让界面不仅清晰易用，也拥有鲜明气质。",
-    tools: "FIGMA · PROTOTYPE",
-  },
-  {
-    no: "C",
-    title: "AIGC 动态创作",
-    en: "AI Motion Creation",
-    text: "探索图像生成、动画与剪辑的组合工作流，把概念快速转化为可传播的动态内容。",
-    tools: "JIMENG · AE · CAPCUT",
-  },
-  {
-    no: "D",
-    title: "落地与协作",
-    en: "Delivery & Collaboration",
-    text: "主动拆解需求、预判风险并推进交付，在品牌规范与真实业务目标之间找到平衡。",
-    tools: "BRIEF · SYSTEM · DELIVERY",
-  },
-];
-
 export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -384,7 +353,7 @@ export default function Home() {
         <div className="navLinks">
           <a href="#about" onClick={(event) => handleAnchorClick(event, "about")}>关于我</a>
           <a href="#work" onClick={(event) => handleAnchorClick(event, "work")}>项目</a>
-          <a href="#strengths" onClick={(event) => handleAnchorClick(event, "strengths")}>能力</a>
+          <a href="#awards" onClick={(event) => handleAnchorClick(event, "awards")}>获奖</a>
         </div>
         <button
           className="contactPill"
@@ -518,58 +487,29 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="stats" aria-label="项目数据" data-reveal>
-          <div><strong>21</strong><span>页产品图册独立设计</span></div>
-          <div><strong>18%</strong><span>详情页点击率提升</span></div>
-          <div><strong>TOP 15%</strong><span>专业成绩排名</span></div>
-          <div><strong>10</strong><span>精选项目系统</span></div>
-        </div>
-
-        <div className="experience" data-reveal>
-          <div className="experienceTitle">
-            <span>EXPERIENCE</span>
-            <h3>把设计放进真实场景。</h3>
+        <section className="awards" id="awards" aria-labelledby="awards-title">
+          <header className="awardsHeading" data-reveal>
+            <span>03 / AWARDS</span>
+            <h3 id="awards-title">获奖<span>与认可</span></h3>
+            <p>SELECTED HONORS</p>
+          </header>
+          <div className="awardsList">
+            {[
+              ["华夏奖文化艺术设计大赛", "视觉传达类", "国家级银奖"],
+              ["米兰设计周", "非命题赛道", "省三等奖"],
+              ["未来设计师", "文创设计赛道", "省级三等奖"],
+              ["好创意全国设计大赛", "视传应用类", "省级优秀奖"],
+              ["全国大学生广告艺术大赛", "平面广告类", "优秀奖"],
+              ["中国大学生广告艺术节学院奖", "视频类", "优秀奖"],
+            ].map(([name, category, prize], index) => (
+              <article className="awardRow" key={name} data-reveal>
+                <span className="awardIndex">{String(index + 1).padStart(2, "0")}</span>
+                <div><h4>{name}</h4><p>{category}</p></div>
+                <span className="awardPrize">{prize}</span>
+              </article>
+            ))}
           </div>
-          <div className="timeline">
-            <article>
-              <time>2026.04 — 08</time>
-              <div>
-                <h4>施耐德万高（天津）电气有限公司</h4>
-                <p>平面设计 · 品牌物料、活动 KV、画册展板与视频脚本、待办组件程序</p>
-              </div>
-              <span>TIANJIN</span>
-            </article>
-            <article>
-              <time>2025.07 — 10</time>
-              <div>
-                <h4>向北极限商贸有限公司</h4>
-                <p>品牌视觉设计 · SKICAT 产品图册、电商详情与 IP 方案</p>
-              </div>
-              <span>CHENGDE</span>
-            </article>
-          </div>
-        </div>
-
-        <div className="certificates" data-reveal>
-          <div className="experienceTitle">
-            <span>CERTIFICATES</span>
-            <h3>技能证书</h3>
-          </div>
-          <div className="certificateList">
-            <article>
-              <span>01</span>
-              <p><strong>设计与办公软件：</strong>Photoshop、Illustrator、Figma、剪映、Blender、AE、WPS、AI 工具（即梦、Codex、ChatGPT、Lovart、Gemini、TapNow 等）。</p>
-            </article>
-            <article>
-              <span>02</span>
-              <p><strong>证书：</strong>普通话二级甲等、国家计算机二级（WPS Office）。</p>
-            </article>
-            <article>
-              <span>03</span>
-              <p><strong>获奖：</strong>华夏奖文化艺术设计大赛：视觉传达类 国家级银奖<br />米兰设计周：非命题赛道 省三等奖<br />未来设计师：文创设计赛道 省级三等奖<br />好创意全国设计大赛：视传应用类 省级优秀奖<br />全国大学生广告艺术大赛 平面广告类优秀奖<br />中国大学生广告艺术节学院奖 视频类优秀奖。</p>
-            </article>
-          </div>
-        </div>
+        </section>
       </section>
 
       <section className="work section" id="work">
@@ -733,25 +673,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      <section className="strengths shell section" id="strengths">
-        <header className="sectionHead strengthHead" data-reveal>
-          <span>04 / STRENGTHS</span>
-          <h2>从想法到落地，<br />让每一步都<span>有依据。</span></h2>
-        </header>
-        <div className="strengthGrid">
-          {strengths.map((item) => (
-            <article key={item.no} data-reveal>
-              <div className="strengthNo">{item.no}</div>
-              <div className="strengthIcon" aria-hidden="true"><span /><i /></div>
-              <h3>{item.title}</h3>
-              <h4>{item.en}</h4>
-              <p>{item.text}</p>
-              <footer>{item.tools}</footer>
-            </article>
-          ))}
-        </div>
-      </section>
 
       <footer className="footer" id="contact">
         <div className="footerGrid" aria-hidden="true" />

@@ -30,7 +30,7 @@ test("keeps primary navigation anchors always linkable", async () => {
   const html = await response.text();
   assert.match(html, /href="#about"[^>]*>关于我<\/a>/);
   assert.match(html, /href="#work"[^>]*>项目<\/a>/);
-  assert.match(html, /href="#strengths"[^>]*>能力<\/a>/);
+  assert.match(html, /href="#awards"[^>]*>获奖<\/a>/);
 
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(source, /handleAnchorClick/);
@@ -104,26 +104,23 @@ test("starts new visits from the hero screen", async () => {
   assert.match(source, /window\.history\.replaceState/);
 });
 
-test("renders the certificate section below experience", async () => {
+test("renders the redesigned awards without removed resume sections", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /技能证书/);
-  assert.match(html, /Photoshop/);
-  assert.match(html, /Illustrator/);
-  assert.match(html, /Figma/);
-  assert.match(html, /普通话二级甲等/);
-  assert.match(html, /国家计算机二级/);
+  assert.doesNotMatch(html, /技能证书|普通话二级甲等|国家计算机二级|把设计放进真实场景|详情页点击率提升|从想法到落地/);
+  assert.match(html, /id="awards"/);
+  assert.equal((html.match(/class="awardRow"/g) || []).length, 6);
   assert.match(html, /获奖/);
-  assert.match(html, /米兰设计周：非命题赛道 省三等奖/);
-  assert.match(html, /全国大学生广告艺术大赛 平面广告类优秀奖/);
-  assert.match(html, /中国大学生广告艺术节学院奖 视频类优秀奖/);
+  assert.match(html, /米兰设计周/);
+  assert.match(html, /全国大学生广告艺术大赛/);
+  assert.match(html, /中国大学生广告艺术节学院奖/);
   assert.doesNotMatch(html, /全国大学生广告艺术大赛平面类省二等奖/);
-  assert.match(html, /华夏奖文化艺术设计大赛：视觉传达类 国家级银奖/);
-  assert.match(html, /米兰设计周：非命题赛道 省三等奖/);
-  assert.match(html, /未来设计师：文创设计赛道 省级三等奖/);
-  assert.match(html, /好创意全国设计大赛：视传应用类 省级优秀奖/);
-  assert.match(html, /全国大学生广告艺术大赛 平面广告类优秀奖/);
+  assert.match(html, /华夏奖文化艺术设计大赛/);
+  assert.match(html, /国家级银奖/);
+  assert.match(html, /未来设计师/);
+  assert.match(html, /好创意全国设计大赛/);
+  assert.match(html, /省级优秀奖/);
 });
 
 test("places all requested PDF projects in the selected-work order", async () => {
@@ -172,11 +169,11 @@ test("uses the supplied preview artwork for projects 01, 02, 06, and 10", async 
   }
 });
 
-test("renders the updated Schneider internship description", async () => {
+test("removes the internship descriptions", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /平面设计 · 品牌物料、活动 KV、画册展板与视频脚本、待办组件程序/);
+  assert.doesNotMatch(html, /待办组件程序|向北极限商贸有限公司|class="timeline"/);
 });
 
 test("renders the supplied high-resolution portrait", async () => {
