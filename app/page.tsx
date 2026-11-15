@@ -3,105 +3,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, MouseEvent } from "react";
 import { videoProjects } from "./video-projects";
-import { PdfViewer } from "./pdf-viewer";
+import { projects } from "./artworks";
 
-const projects = [
-  {
-    index: "01",
-    title: "盒马&认养一头牛联名KV",
-    subtitle: "联名品牌活动主视觉与系列 KV 设计",
-    tags: ["CAMPAIGN KV", "BRAND COLLAB", "VISUAL DESIGN"],
-    image: "/assets/project-hema-kv.webp",
-    pdf: "/projects/07-hema-niuyang.pdf",
-    fit: "contain",
-    accent: "#ff6c5f",
-  },
-  {
-    index: "02",
-    title: "MOMO PET品牌国际小狗节活动主视觉",
-    subtitle: "宠物品牌节日活动主视觉设计",
-    tags: ["CAMPAIGN VISUAL", "IP DESIGN", "BRAND SYSTEM"],
-    image: "/assets/project-momo-dog-kv.webp",
-    pdf: "/projects/08-momo-pet-dog-day.pdf",
-    fit: "contain",
-    accent: "#d7ff59",
-  },
-  {
-    index: "03",
-    title: "MOMO PET",
-    subtitle: "宠物生活方式品牌视觉识别系统",
-    tags: ["BRAND IDENTITY", "IP DESIGN", "VISUAL SYSTEM"],
-    image: "/assets/project-momopet.webp",
-    pdf: "/projects/01-momopet.pdf",
-    accent: "#ff6c5f",
-  },
-  {
-    index: "04",
-    title: "拾光 SHIGUANG",
-    subtitle: "临期食品服务平台 UI / IP 设计",
-    tags: ["UI DESIGN", "PRODUCT", "IP DESIGN"],
-    image: "/assets/project-ui.webp",
-    pdf: "/projects/02-shiguang.pdf",
-    accent: "#d7ff59",
-  },
-  {
-    index: "05",
-    title: "五虎祯祥",
-    subtitle: "非物质文化遗产视觉文创设计",
-    tags: ["CULTURAL IP", "PACKAGING", "AIGC"],
-    image: "/assets/project-wuhu-cover.webp",
-    pdf: "/projects/03-wuhu.pdf",
-    fit: "contain",
-    accent: "#ff4c70",
-  },
-  {
-    index: "06",
-    title: "幻唐志 雪千寻角色Q版设计及banner图设计",
-    subtitle: "角色 Q 版视觉与活动 Banner 设计",
-    tags: ["CHARACTER DESIGN", "BANNER", "IP VISUAL"],
-    image: "/assets/project-xueqian-banner.webp",
-    pdf: "/projects/09-xuetang-xueqian.pdf",
-    fit: "contain",
-    accent: "#e9b35b",
-  },
-  {
-    index: "07",
-    title: "上岛 · 咖啡",
-    subtitle: "咖啡品牌与线下空间视觉体验",
-    tags: ["BRANDING", "RETAIL", "VISUAL IDENTITY"],
-    image: "/assets/project-cafe.webp",
-    pdf: "/projects/04-shangdao-cafe.pdf",
-    accent: "#b4825e",
-  },
-  {
-    index: "08",
-    title: "兰也 LANYE",
-    subtitle: "轻奢美妆品牌视觉识别系统",
-    tags: ["VI SYSTEM", "RETAIL", "BEAUTY"],
-    image: "/assets/project-lanye-cover.webp",
-    pdf: "/projects/05-lanye.pdf",
-    accent: "#d6b16b",
-  },
-  {
-    index: "09",
-    title: "SKICAT",
-    subtitle: "滑雪品牌产品视觉与电商设计",
-    tags: ["E-COMMERCE", "ART DIRECTION", "LAYOUT"],
-    image: "/assets/project-skicat.webp",
-    pdf: "/projects/06-skicat.pdf",
-    accent: "#f45e43",
-  },
-  {
-    index: "10",
-    title: "施耐德万高H5及海报邀请函设计",
-    subtitle: "企业活动 H5、海报与邀请函视觉设计",
-    tags: ["H5 DESIGN", "POSTER", "EVENT VISUAL"],
-    image: "/assets/project-schneider-kv.webp",
-    pdf: "/projects/10-schneider-wanguo.pdf",
-    fit: "contain",
-    accent: "#8de0c4",
-  },
-];
 
 export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -116,6 +19,19 @@ export default function Home() {
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const selectedProject = selectedProjectIndex === null ? null : projects[selectedProjectIndex];
   const selectedVideo = selectedVideoIndex === null ? null : videoProjects[selectedVideoIndex];
+
+  useLayoutEffect(() => {
+    const cards = [...document.querySelectorAll<HTMLElement>(".artworkGrid .projectCard")];
+    const update = () => cards.forEach((card) => {
+      const height = [...card.children].reduce((sum, child) => sum + child.getBoundingClientRect().height, 0);
+      card.style.gridRowEnd = `span ${Math.ceil((height + 8) / 4)}`;
+      card.parentElement?.setAttribute("data-masonry", "true");
+    });
+    const observer = new ResizeObserver(update);
+    cards.forEach((card) => [...card.children].forEach((child) => observer.observe(child)));
+    update();
+    return () => observer.disconnect();
+  }, []);
 
   useLayoutEffect(() => {
     const previousScrollRestoration = window.history.scrollRestoration;
@@ -516,10 +432,10 @@ export default function Home() {
         <div className="shell">
           <header className="sectionHead workHead" data-reveal>
             <span>02 / SELECTED WORK</span>
-            <h2>精选项目<sup>10</sup></h2>
+            <h2>精选作品<sup>05</sup></h2>
           </header>
 
-          <div className="projectGrid">
+          <div className="projectGrid artworkGrid">
             {projects.map((project, projectIndex) => (
               <article
                 className="projectCard"
@@ -538,24 +454,20 @@ export default function Home() {
                 aria-label={`浏览 ${project.title} 项目详情`}
                 data-reveal
               >
-                <div className={`projectMedia${project.fit === "contain" ? " projectMediaContain" : ""}`}>
+                <div className="projectMedia artworkMedia">
                   <img
                     src={project.image}
                     alt={`${project.title} 项目展示`}
-                    width={1200}
-                    height={800}
+                    width={project.width}
+                    height={project.height}
                     loading={projectIndex < 2 ? "eager" : "lazy"}
                     fetchPriority={projectIndex < 2 ? "high" : "auto"}
                     decoding="async"
                   />
-                  <span className="projectIndex">{project.index}</span>
-                  <span className="viewMark">VIEW CASE ↗</span>
                 </div>
                 <div className="projectInfo">
-                  <div><h3>{project.title}</h3><p>{project.subtitle}</p></div>
-                  <ul aria-label="项目类型">
-                    {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                  </ul>
+                  <h3>{project.title}</h3>
+                  <span aria-hidden="true">↗</span>
                 </div>
               </article>
             ))}
@@ -632,8 +544,14 @@ export default function Home() {
                 <button className="projectReaderClose" type="button" onClick={() => setSelectedProjectIndex(null)} aria-label="关闭项目详情">关闭 ×</button>
               </div>
             </header>
-            <div className="projectReaderBody">
-              <PdfViewer src={selectedProject.pdf} title={selectedProject.title} />
+            <div className="projectReaderBody" key={selectedProject.index}>
+              <div className="artworkDetail">
+                {selectedProject.tiles.map((tile, index) => (
+                  <img key={tile.src} src={tile.src} width={tile.width} height={tile.height}
+                    alt={`${selectedProject.title} · ${index + 1}`} loading={index === 0 ? "eager" : "lazy"}
+                    decoding="async" />
+                ))}
+              </div>
             </div>
           </div>
         </div>

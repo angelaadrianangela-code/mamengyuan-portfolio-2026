@@ -17,10 +17,10 @@ test("renders Ma Mengyuan's portfolio", async () => {
   const html = await response.text();
   assert.match(html, /马梦圆/);
   assert.match(html, /MA MENGYUAN/);
-  assert.match(html, /精选项目/);
+  assert.match(html, /精选作品/);
   assert.match(html, /关于我/);
   assert.match(html, /MOMO PET/);
-  assert.match(html, /SKICAT/);
+  assert.match(html, /脑洞放映节/);
   assert.doesNotMatch(html, /codex-preview|Building your site/);
 });
 
@@ -123,49 +123,32 @@ test("renders the redesigned awards without removed resume sections", async () =
   assert.match(html, /省级优秀奖/);
 });
 
-test("places all requested PDF projects in the selected-work order", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  const html = await response.text();
-  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+test("renders only the five new artworks in upload order", async () => {
+  const html = await (await render()).text();
   const expected = [
-    ["盒马&amp;认养一头牛联名KV", "/projects/07-hema-niuyang.pdf"],
-    ["MOMO PET品牌国际小狗节活动主视觉", "/projects/08-momo-pet-dog-day.pdf"],
-    ["MOMO PET", "/projects/01-momopet.pdf"],
-    ["拾光 SHIGUANG", "/projects/02-shiguang.pdf"],
-    ["五虎祯祥", "/projects/03-wuhu.pdf"],
-    ["幻唐志 雪千寻角色Q版设计及banner图设计", "/projects/09-xuetang-xueqian.pdf"],
-    ["上岛 · 咖啡", "/projects/04-shangdao-cafe.pdf"],
-    ["兰也 LANYE", "/projects/05-lanye.pdf"],
-    ["SKICAT", "/projects/06-skicat.pdf"],
-    ["施耐德万高H5及海报邀请函设计", "/projects/10-schneider-wanguo.pdf"],
+    "「认养一头牛&amp;盒马鲜生」联名视觉KV",
+    "「哔哩哔哩」脑洞放映节 活动全案设计",
+    "「快手」夜市寻味记 玩法活动设计",
+    "「MOMO PET」PupPy Day节日KV",
+    "「山西非遗黎侯虎」文创设计",
   ];
-
   let previous = -1;
-  for (const [title, pdf] of expected) {
-    const titleAt = html.indexOf(`<h3>${title}</h3>`);
-    assert.ok(titleAt > previous, `${title} should follow the requested order`);
-    assert.match(source, new RegExp(pdf.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
-    previous = titleAt;
-    const file = await stat(new URL(`../public${pdf}`, import.meta.url));
-    assert.ok(file.size > 0);
+  for (const title of expected) {
+    const at = html.indexOf(`<h3>${title}</h3>`);
+    assert.ok(at > previous, title);
+    previous = at;
   }
-  assert.match(html, /精选项目<sup>10<\/sup>/);
+  assert.match(html, /精选作品<sup>05<\/sup>/);
+  assert.equal((html.match(/class="projectCard"/g) || []).length, 5);
+  assert.doesNotMatch(html, /精选项目|拾光 SHIGUANG|兰也 LANYE|幻唐志/);
 });
 
-test("uses the supplied preview artwork for projects 01, 02, 06, and 10", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  const html = await response.text();
-  for (const asset of [
-    "/assets/project-hema-kv.webp",
-    "/assets/project-momo-dog-kv.webp",
-    "/assets/project-xueqian-banner.webp",
-    "/assets/project-schneider-kv.webp",
-  ]) {
-    assert.match(html, new RegExp(asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
-    const file = await stat(new URL(`../public${asset}`, import.meta.url));
-    assert.ok(file.size > 0);
+test("loads all five supplied covers at their native proportions", async () => {
+  const html = await (await render()).text();
+  for (let i = 1; i <= 5; i++) {
+    const path = `/assets/works-202611/0${i}-cover.webp`;
+    assert.ok(html.includes(path));
+    assert.ok((await stat(new URL(`../public${path}`, import.meta.url))).size > 0);
   }
 });
 
@@ -201,19 +184,15 @@ test("uses compressed image assets and long-lived cache headers", async () => {
   assert.match(headers, /\/videos\/\*\.mp4/);
 });
 
-test("renders the new LANYE cover in project 05", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  const html = await response.text();
-  assert.match(html, /\/assets\/project-lanye-cover\.webp/);
+test("does not render the replaced project covers", async () => {
+  const html = await (await render()).text();
+  assert.doesNotMatch(html, /project-lanye-cover|project-ui.webp|project-skicat.webp/);
 });
 
-test("renders the new Wuhu cover in project 03", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  const html = await response.text();
-  assert.match(html, /\/assets\/project-wuhu-cover\.webp/);
-  assert.match(html, /projectMedia projectMediaContain/);
+test("uses uncropped responsive artwork covers", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /artworkMedia img[^}]*height: auto/);
+  assert.match(css, /artworkMedia img[^}]*object-fit: contain/);
 });
 
 test("removes the campus media center experience", async () => {
@@ -224,35 +203,14 @@ test("removes the campus media center experience", async () => {
   assert.doesNotMatch(html, /CAMPUS/);
 });
 
-test("wires all project cards to accessible PDF detail readers", async () => {
+test("opens complete artwork images in the accessible site reader", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const pdfFiles = [
-    "07-hema-niuyang.pdf",
-    "08-momo-pet-dog-day.pdf",
-    "01-momopet.pdf",
-    "02-shiguang.pdf",
-    "03-wuhu.pdf",
-    "09-xuetang-xueqian.pdf",
-    "04-shangdao-cafe.pdf",
-    "05-lanye.pdf",
-    "06-skicat.pdf",
-    "10-schneider-wanguo.pdf",
-  ];
-
-  for (const filename of pdfFiles) {
-    assert.match(source, new RegExp(`/projects/${filename.replace(".", "\\.")}`));
-    const file = await stat(new URL(`../public/projects/${filename}`, import.meta.url));
-    assert.ok(file.size > 0);
-  }
-
   assert.match(source, /role="dialog"/);
   assert.match(source, /aria-modal="true"/);
-  assert.match(source, /<PdfViewer/);
-  assert.match(source, /from "\.\/pdf-viewer"/);
-  assert.doesNotMatch(source, /<iframe[^>]+selectedProject\.pdf/);
-  assert.doesNotMatch(source, /新窗口打开/);
-  assert.doesNotMatch(source, /target="_blank"/);
-  assert.match(source, /event\.key === "Escape"/);
+  assert.match(source, /selectedProject.tiles.map/);
+  assert.match(source, /key={selectedProject.index}/);
+  assert.doesNotMatch(source, /<PdfViewer|selectedProject.pdf|新窗口打开/);
+  assert.match(source, /event.key === "Escape"/);
 });
 
 test("renders project PDFs inside the site for mobile browsers", async () => {
