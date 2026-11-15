@@ -30,7 +30,7 @@ test("keeps primary navigation anchors always linkable", async () => {
   const html = await response.text();
   assert.match(html, /href="#about"[^>]*>关于我<\/a>/);
   assert.match(html, /href="#work"[^>]*>作品<\/a>/);
-  assert.match(html, /href="#awards"[^>]*>获奖<\/a>/);
+  assert.doesNotMatch(html, /href="#awards"/);
 
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(source, /handleAnchorClick/);
