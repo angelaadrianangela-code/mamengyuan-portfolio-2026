@@ -258,5 +258,95 @@ export const projects = [
       }
     ],
     "accent": "#d7ff59"
+  },
+  {
+    "index": "06",
+    "title": "「拾光」临期食品APP",
+    "image": "/assets/works-202611/06-cover.webp",
+    "width": 3988,
+    "height": 2485,
+    "tiles": [
+      {
+        "src": "/assets/works-202611/06-detail-01.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-02.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-03.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-04.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-05.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-06.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-07.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-08.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-09.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-10.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-11.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-12.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-13.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-14.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-15.webp",
+        "width": 6735,
+        "height": 2200
+      },
+      {
+        "src": "/assets/works-202611/06-detail-16.webp",
+        "width": 6735,
+        "height": 621
+      }
+    ],
+    "accent": "#d7ff59"
   }
 ];

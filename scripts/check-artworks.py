@@ -9,7 +9,8 @@ text = (root / 'app/artworks.ts').read_text(encoding='utf-8')
 works = json.loads(text.removeprefix('export const projects = ').strip().removesuffix(';'))
 source = Path('C:/Users/Lenovo/Desktop/bilibili/IP')
 for i, work in enumerate(works, 1):
-    original = Image.open(source / (work['title'] + ('.jpg' if i == 3 else '.png')))
+    folder = source.parent if i == 6 else source
+    original = Image.open(folder / (work['title'] + ('.jpg' if i == 3 else '.png')))
     cover = Image.open(root / 'public' / work['image'].lstrip('/'))
     assert cover.size == (work['width'], work['height'])
     height = 0

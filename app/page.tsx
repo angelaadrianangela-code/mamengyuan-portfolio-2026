@@ -432,7 +432,7 @@ export default function Home() {
         <div className="shell">
           <header className="sectionHead workHead" data-reveal>
             <span>02 / SELECTED WORK</span>
-            <h2>精选作品<sup>05</sup></h2>
+            <h2>精选作品<sup>{String(projects.length).padStart(2, "0")}</sup></h2>
           </header>
 
           <div className="projectGrid artworkGrid">

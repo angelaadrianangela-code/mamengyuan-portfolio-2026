@@ -123,7 +123,7 @@ test("renders the redesigned awards without removed resume sections", async () =
   assert.match(html, /省级优秀奖/);
 });
 
-test("renders only the five new artworks in upload order", async () => {
+test("renders all six artworks in upload order", async () => {
   const html = await (await render()).text();
   const expected = [
     "「认养一头牛&amp;盒马鲜生」联名视觉KV",
@@ -131,6 +131,7 @@ test("renders only the five new artworks in upload order", async () => {
     "「快手」夜市寻味记 玩法活动设计",
     "「MOMO PET」PupPy Day节日KV",
     "「山西非遗黎侯虎」文创设计",
+    "「拾光」临期食品APP",
   ];
   let previous = -1;
   for (const title of expected) {
@@ -138,14 +139,14 @@ test("renders only the five new artworks in upload order", async () => {
     assert.ok(at > previous, title);
     previous = at;
   }
-  assert.match(html, /精选作品<sup>05<\/sup>/);
-  assert.equal((html.match(/class="projectCard"/g) || []).length, 5);
+  assert.match(html, /精选作品<sup>06<\/sup>/);
+  assert.equal((html.match(/class="projectCard"/g) || []).length, 6);
   assert.doesNotMatch(html, /精选项目|拾光 SHIGUANG|兰也 LANYE|幻唐志/);
 });
 
-test("loads all five supplied covers at their native proportions", async () => {
+test("loads all six supplied covers at their native proportions", async () => {
   const html = await (await render()).text();
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 6; i++) {
     const path = `/assets/works-202611/0${i}-cover.webp`;
     assert.ok(html.includes(path));
     assert.ok((await stat(new URL(`../public${path}`, import.meta.url))).size > 0);

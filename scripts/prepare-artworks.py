@@ -1,6 +1,7 @@
 """Encode supplied artwork without resizing; tile long images for lazy decoding."""
 from pathlib import Path
 import json
+import sys
 from PIL import Image
 
 Image.MAX_IMAGE_PIXELS = 250_000_000
@@ -14,13 +15,21 @@ names = [
     '「快手」夜市寻味记 玩法活动设计',
     '「MOMO PET」PupPy Day节日KV',
     '「山西非遗黎侯虎」文创设计',
+    '「拾光」临期食品APP',
 ]
 works = []
 for i, name in enumerate(names, 1):
-    cover = Image.open(source / (name + '（封面）.png')).convert('RGB')
+    if '--append' in sys.argv and i < len(names):
+        if not works:
+            existing = (root / 'app/artworks.ts').read_text(encoding='utf-8')
+            works = json.loads(existing.removeprefix('export const projects = ').strip().removesuffix(';'))[:len(names) - 1]
+        continue
+    folder = source.parent if i == 6 else source
+    suffix = '(封面).png' if i == 6 else '（封面）.png'
+    cover = Image.open(folder / (name + suffix)).convert('RGB')
     cover_path = out / f'{i:02}-cover.webp'
     cover.save(cover_path, 'WEBP', quality=90, method=6)
-    full = Image.open(source / (name + ('.jpg' if i == 3 else '.png'))).convert('RGB')
+    full = Image.open(folder / (name + ('.jpg' if i == 3 else '.png'))).convert('RGB')
     tiles = []
     for n, y in enumerate(range(0, full.height, 2200), 1):
         tile = full.crop((0, y, full.width, min(y + 2200, full.height)))
