@@ -234,7 +234,8 @@ test("renders the video project carousel with lazy covers and dedicated playback
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(html, /AI动态影像/);
+  assert.match(html, /动态影像/);
+  assert.doesNotMatch(html, /AI动态影像/);
   assert.match(html, /“月河”艺术疗愈短片/);
   assert.match(html, /“五虎祯祥”周边动效设计/);
   assert.match(html, /loading="lazy"/);

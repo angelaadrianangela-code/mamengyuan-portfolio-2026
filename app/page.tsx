@@ -478,15 +478,15 @@ export default function Home() {
         <div className="shell">
           <header className="sectionHead videoHead" data-reveal>
             <span>03 / VIDEO PROJECTS</span>
-            <h2>AI动态影像<sup>06</sup></h2>
+            <h2>动态影像<sup>06</sup></h2>
+            <div className="videoRailControls" aria-label="调节视频项目进度">
+              <button type="button" onClick={() => scrollVideoRail(-1)} aria-label="向左浏览视频项目">←</button>
+              <button type="button" onClick={() => scrollVideoRail(1)} aria-label="向右浏览视频项目">→</button>
+            </div>
           </header>
         </div>
 
         <div className="videoRailWrap" data-reveal>
-          <div className="videoRailControls" aria-label="调节视频项目进度">
-            <button type="button" onClick={() => scrollVideoRail(-1)} aria-label="向左浏览视频项目">←</button>
-            <button type="button" onClick={() => scrollVideoRail(1)} aria-label="向右浏览视频项目">→</button>
-          </div>
           <div className="videoRail" ref={videoRailRef} aria-label="视频项目横向列表">
             {[...videoProjects, ...videoProjects].map((video, itemIndex) => (
               <button

@@ -409,7 +409,8 @@ img {
 .aboutCopy .kicker {
   margin: 0 0 26px;
   color: var(--acid);
-  font: 600 13px/1.2 Consolas, monospace;
+  font-size: clamp(16px, 1.25vw, 21px);
+  line-height: 1.9;
 }
 
 .aboutCopy h2 {
@@ -888,6 +889,17 @@ img {
   align-items: end;
 }
 
+.sectionHead.workHead,
+.sectionHead.videoHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  text-align: left;
+}
+.workHead > span,
+.videoHead > span { grid-column: 1 / -1; }
+
 .videoHead h2 {
   margin: 0;
   font-size: clamp(58px, 7vw, 122px);
@@ -905,15 +917,15 @@ img {
 
 .videoRailWrap {
   position: relative;
-  margin-top: 92px;
+  margin-top: 40px;
 }
 
 .videoRailControls {
-  width: var(--shell);
+  width: auto;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 14px;
-  margin: 0 auto 26px;
+  margin: 0;
 }
 
 .videoRailControls button {
@@ -1524,9 +1536,9 @@ button:focus-visible {
   .projectInfo { flex-direction: column; }
   .projectInfo ul { justify-content: flex-start; }
   .videoHead h2 { margin-top: 28px; font-size: 58px; }
-  .videoRailWrap { margin-top: 58px; }
-  .videoRailControls { width: var(--shell); justify-content: flex-start; margin-bottom: 16px; }
-  .videoRailControls button { width: 44px; height: 44px; }
+  .videoRailWrap { margin-top: 28px; }
+  .videoRailControls { width: auto; justify-content: flex-end; margin: 0; gap: 8px; }
+  .videoRailControls button { width: 40px; height: 40px; }
   .videoRail { gap: 16px; padding-inline: 16px; scroll-padding-inline: 16px; }
   .videoCard { flex-basis: min(82vw, 420px); }
   .videoInfo { min-height: 112px; flex-direction: column; gap: 8px; }
@@ -2017,6 +2029,21 @@ body {
 
 .projectIndex,
 .viewMark { backdrop-filter: blur(14px) saturate(130%); }
+
+.aboutCopy h2,
+.workHead h2,
+.videoHead h2 {
+  font-size: clamp(44px, 5.1vw, 88px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.065em;
+}
+.workHead h2,
+.videoHead h2 { margin: 0; justify-self: start; }
+@media (max-width: 760px) {
+  .aboutCopy h2, .workHead h2, .videoHead h2 { font-size: 44px; }
+  .sectionHead.workHead, .sectionHead.videoHead { gap: 20px 12px; }
+}
 
 .strengthGrid article {
   overflow: hidden;
