@@ -356,8 +356,7 @@ export default function Home() {
               <em>鲜活表达</em>之间做设计。
             </h2>
             <p className="intro">
-              河北工业大学艺术与科技专业本科在读，专注品牌视觉、UI 与 AIGC 创作。
-              多次主导品牌物料、IP、界面和动态内容项目，擅长把复杂需求整理成清晰、统一且具有传播力的视觉语言。
+              专注视觉与AIGC 创作，多次主导视觉KV、IP角色设计和AIGC内容创作等项目，擅长把复杂需求整理成清晰、统一且具有传播力的视觉语言。
             </p>
 
             <div className="contactRows">
