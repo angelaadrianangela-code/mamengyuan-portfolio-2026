@@ -4,7 +4,7 @@ export const videoProjects = [
     slug: "yuehe-art-healing",
     title: "“月河”艺术疗愈短片",
     type: "AIGC MOTION · SHORT FILM",
-    cover: "/videos/covers/yuehe-art-healing.webp",
+    cover: "/videos/covers/yuehe-art-healing-v2.webp",
     video: "/videos/yuehe-art-healing.mp4",
   },
   {

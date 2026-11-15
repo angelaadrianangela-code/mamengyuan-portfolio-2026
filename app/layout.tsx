@@ -23,7 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   const imagePreloads = [
     "/hero-ma-mengyuan.webp",
     "/assets/portrait-mamengyuan-garden-v5.webp",
-    "/videos/covers/yuehe-art-healing.webp",
+    "/videos/covers/yuehe-art-healing-v2.webp",
     "/videos/covers/tianjin-jizhou.webp",
     "/videos/covers/huayang-1982-tvc.webp",
     "/videos/covers/guardian-spirit-pearl.webp",
