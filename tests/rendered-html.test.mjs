@@ -273,6 +273,8 @@ test("exports all video pages and public video assets", async () => {
     ["guardian-spirit-pearl", "“守护灵珠”动画短片"],
     ["skicat-ip-animation", "“滑雪猫”IP动画短片"],
     ["wuhu-motion-design", "“五虎祯祥”周边动效设计"],
+    ["night-market-avatar-reward", "夜市寻味记 获得头像框"],
+    ["night-market-opening", "夜市寻味记 活动开场动画"],
   ];
 
   for (const [slug, title] of videos) {

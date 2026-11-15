@@ -17,6 +17,8 @@ const videoSlugs = [
   "guardian-spirit-pearl",
   "skicat-ip-animation",
   "wuhu-motion-design",
+  "night-market-avatar-reward",
+  "night-market-opening",
 ];
 
 async function renderPath(pathname) {

@@ -48,6 +48,24 @@ export const videoProjects = [
     cover: "/videos/covers/wuhu-motion-design.webp",
     video: "/videos/wuhu-motion-design.mp4",
   },
+  {
+    index: "V07",
+    slug: "night-market-avatar-reward",
+    title: "夜市寻味记 获得头像框",
+    type: "UI MOTION · REWARD ANIMATION",
+    cover: "/videos/covers/night-market-avatar-reward.webp",
+    video: "/videos/night-market-avatar-reward.mp4",
+    fit: "contain",
+  },
+  {
+    index: "V08",
+    slug: "night-market-opening",
+    title: "夜市寻味记 活动开场动画",
+    type: "UI MOTION · OPENING ANIMATION",
+    cover: "/videos/covers/night-market-opening.webp",
+    video: "/videos/night-market-opening.mp4",
+    fit: "contain",
+  },
 ] as const;
 
 export type VideoProject = (typeof videoProjects)[number];
