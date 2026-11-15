@@ -268,7 +268,7 @@ export default function Home() {
         </a>
         <div className="navLinks">
           <a href="#about" onClick={(event) => handleAnchorClick(event, "about")}>关于我</a>
-          <a href="#work" onClick={(event) => handleAnchorClick(event, "work")}>项目</a>
+          <a href="#work" onClick={(event) => handleAnchorClick(event, "work")}>作品</a>
           <a href="#awards" onClick={(event) => handleAnchorClick(event, "awards")}>获奖</a>
         </div>
         <button

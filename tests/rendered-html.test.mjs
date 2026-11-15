@@ -29,7 +29,7 @@ test("keeps primary navigation anchors always linkable", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /href="#about"[^>]*>关于我<\/a>/);
-  assert.match(html, /href="#work"[^>]*>项目<\/a>/);
+  assert.match(html, /href="#work"[^>]*>作品<\/a>/);
   assert.match(html, /href="#awards"[^>]*>获奖<\/a>/);
 
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");

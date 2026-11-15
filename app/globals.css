@@ -1975,6 +1975,10 @@ body {
 .artworkGrid .artworkMedia::after { display: none; }
 .artworkGrid .artworkMedia img { display: block; width: 100%; height: auto; object-fit: contain; border-radius: 8px; }
 .artworkGrid .projectCard:hover .artworkMedia img { transform: none; filter: none; }
+.artworkGrid .artworkMedia { transition: transform 0.4s cubic-bezier(0.2, 0.75, 0.25, 1); transform-origin: center; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .artworkGrid .projectCard:hover .artworkMedia { transform: scale(1.018); }
+}
 .artworkGrid .projectInfo { border: 0; padding: 10px 0 20px; gap: 12px; align-items: baseline; }
 .artworkGrid .projectInfo h3 { margin: 0; font-size: clamp(13px, 1.075vw, 19px); font-weight: 500; line-height: 1.6; letter-spacing: 0; }
 .artworkGrid .projectInfo > span { color: var(--acid); font-size: 16px; }
