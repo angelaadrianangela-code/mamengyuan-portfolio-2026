@@ -1734,6 +1734,32 @@ body {
   filter: saturate(0.92) contrast(1.08);
 }
 
+.portraitCard.portraitPhoto {
+  width: 100%;
+  max-width: 3068px;
+  min-height: 0;
+  height: auto;
+  background: none;
+  overflow: visible;
+}
+.portraitPhoto::after { display: none; }
+.portraitCard.portraitPhoto img,
+.portraitCard.portraitPhoto:hover img {
+  position: static;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  transform: none;
+  filter: none;
+  object-fit: contain;
+}
+.portraitPhoto figcaption {
+  position: static;
+  padding: 14px 0 0;
+  border-top: 0;
+}
+
 .projectCard {
   position: relative;
   isolation: isolate;

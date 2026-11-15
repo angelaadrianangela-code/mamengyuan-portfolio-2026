@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const imagePreloads = [
     "/hero-ma-mengyuan.webp",
-    "/assets/portrait-mamengyuan-v4.webp",
+    "/assets/portrait-mamengyuan-garden-v5.webp",
     "/videos/covers/yuehe-art-healing.webp",
     "/videos/covers/tianjin-jizhou.webp",
     "/videos/covers/huayang-1982-tvc.webp",

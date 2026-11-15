@@ -164,7 +164,7 @@ test("renders the supplied high-resolution portrait", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /\/assets\/portrait-mamengyuan-v4\.webp/);
+  assert.match(html, /\/assets\/portrait-mamengyuan-garden-v5\.webp/);
   assert.match(html, /loading="lazy"/);
   assert.match(html, /decoding="async"/);
   assert.doesNotMatch(html, /\/assets\/portrait-mamengyuan-v3\.png/);
@@ -174,11 +174,11 @@ test("renders the supplied high-resolution portrait", async () => {
 
 test("uses compressed image assets and long-lived cache headers", async () => {
   const hero = await stat(new URL("../public/hero-ma-mengyuan.webp", import.meta.url));
-  const portrait = await stat(new URL("../public/assets/portrait-mamengyuan-v4.webp", import.meta.url));
+  const portrait = await stat(new URL("../public/assets/portrait-mamengyuan-garden-v5.webp", import.meta.url));
   const headers = await readFile(new URL("../public/_headers", import.meta.url), "utf8");
 
   assert.ok(hero.size < 120 * 1024);
-  assert.ok(portrait.size < 500 * 1024);
+  assert.ok(portrait.size < 2 * 1024 * 1024);
   assert.match(headers, /\/assets\/\*/);
   assert.match(headers, /Cache-Control: public, max-age=31536000, immutable/);
   assert.match(headers, /\/videos\/covers\/\*/);

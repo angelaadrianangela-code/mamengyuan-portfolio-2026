@@ -334,13 +334,12 @@ export default function Home() {
         </header>
 
         <div className="aboutGrid" data-reveal>
-          <figure className="portraitCard">
-            <div className="portraitGlow" />
+          <figure className="portraitCard portraitPhoto">
             <img
-              src="/assets/portrait-mamengyuan-v4.webp"
+              src="/assets/portrait-mamengyuan-garden-v5.webp"
               alt="马梦圆肖像"
-              width={1500}
-              height={2097}
+              width={3068}
+              height={4096}
               loading="lazy"
               decoding="async"
             />
