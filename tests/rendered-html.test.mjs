@@ -81,6 +81,14 @@ test("renders the supplied full-screen hero artwork without the old overlay titl
   assert.doesNotMatch(html, /hero-video-art-healing\.mp4/);
 });
 
+test("exposes both hero rings as keyboard-accessible interactive controls", async () => {
+  const html = await (await render()).text();
+  assert.equal((html.match(/class="heroOrbButton"/g) || []).length, 2);
+  assert.match(html, /aria-label="拖动大圆环探索背景，可用方向键移动，Esc复位"/);
+  assert.match(html, /aria-label="拖动小圆环探索背景，可用方向键移动，Esc复位"/);
+  assert.doesNotMatch(html, /class="heroMesh interactiveMesh" aria-hidden="true"/);
+});
+
 test("renders simplified contact labels and copy actions", async () => {
   const response = await render();
   assert.equal(response.status, 200);

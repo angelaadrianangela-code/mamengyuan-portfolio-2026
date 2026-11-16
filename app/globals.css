@@ -2148,6 +2148,44 @@ body :where(h1, h2, h3, h4, p, span, a, button, strong, li, time, footer, figcap
 }
 
 .awardsToggle { display: none; }
+.heroMesh.interactiveMesh { z-index: 1; }
+.heroContent { position: relative; z-index: 2; pointer-events: none; }
+.hero .scrollCue { z-index: 3; }
+.heroContent a, .heroContent button { pointer-events: auto; }
+.heroOrb { position: absolute; animation: meshFloat 7.8s ease-in-out infinite alternate; pointer-events: none; }
+.heroOrb:first-child { width: 36vw; height: 36vw; right: -8vw; top: 7vh; }
+.heroOrb:nth-child(2) { width: 12vw; height: 12vw; right: 29vw; top: 18vh; animation-delay: -3s; }
+.heroOrbButton {
+  position: relative; display: block; width: 100%; height: 100%; padding: 0;
+  border-radius: 50%; border: 1px solid rgba(216, 255, 88, 0.36);
+  background: rgba(216, 255, 88, 0.025); overflow: hidden;
+  box-shadow: inset 0 0 80px rgba(216, 255, 88, 0.07), 0 0 90px rgba(216, 255, 88, 0.05);
+  transform: translate3d(var(--drag-x, 0px), var(--drag-y, 0px), 0);
+  pointer-events: auto; cursor: grab; touch-action: pan-y; user-select: none;
+  transition: border-color .3s ease, box-shadow .3s ease;
+}
+.heroOrbButton::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("/hero-ma-mengyuan.webp"); background-repeat: no-repeat;
+  background-size: var(--lens-size, 0px 0px); background-position: var(--lens-position, 0px 0px);
+  opacity: 0; transition: opacity .4s ease;
+}
+.heroOrbButton:hover, .heroOrbButton:focus-visible, .heroOrbButton[data-dragging="true"] {
+  border-color: rgba(216, 255, 88, 0.72);
+  box-shadow: inset 0 0 60px rgba(216, 255, 88, 0.09), 0 0 40px rgba(216, 255, 88, 0.12);
+}
+.heroOrbButton:hover::before, .heroOrbButton:focus-visible::before { opacity: .3; }
+.heroOrbButton[data-dragging="true"]::before { opacity: .42; }
+.heroOrbButton[data-dragging="true"] { cursor: grabbing; }
+.heroOrbButton:focus-visible { outline: 2px solid var(--acid); outline-offset: 5px; }
+.interactiveMesh > span { animation-duration: 8s; }
+@media (max-width: 760px) {
+  .heroOrb:first-child { width: 82vw; height: 82vw; right: -34vw; }
+  .heroOrb:nth-child(2) { width: 34vw; height: 34vw; right: 20vw; }
+}
+@media (hover: none) {
+  .heroOrbButton { pointer-events: none; }
+}
 @media (max-width: 760px) {
   .projectReader { width: 100%; max-width: 100vw; padding: 0; }
   .projectReaderPanel { width: 100%; max-width: 100%; min-width: 0; border: 0; border-radius: 0; }

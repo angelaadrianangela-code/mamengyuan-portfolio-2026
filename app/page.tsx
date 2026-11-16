@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, MouseEvent } from "react";
 import { videoProjects } from "./video-projects";
 import { projects } from "./artworks";
+import { HeroOrbs } from "./hero-orbs";
 
 
 export default function Home() {
@@ -294,7 +295,7 @@ export default function Home() {
           fetchPriority="high"
         />
         <div className="heroShade" />
-        <div className="heroMesh" aria-hidden="true"><span /><span /><span /></div>
+        <HeroOrbs />
 
         <div className="heroContent shell">
           <div className="heroEyebrow">
