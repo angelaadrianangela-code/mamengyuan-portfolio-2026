@@ -89,6 +89,15 @@ test("exposes both hero rings as keyboard-accessible interactive controls", asyn
   assert.doesNotMatch(html, /class="heroMesh interactiveMesh" aria-hidden="true"/);
 });
 
+test("renders hero lenses with one opaque image instead of blended duplicates", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const rule = css.match(/\.heroOrbButton::before\s*\{([^}]+)\}/)?.[1];
+  assert.ok(rule);
+  assert.match(rule, /background-color: #050707/);
+  assert.doesNotMatch(rule, /opacity:|transition: opacity/);
+  assert.doesNotMatch(css, /heroOrbButton[^}]*opacity:\s*\.(3|42)/);
+});
+
 test("renders simplified contact labels and copy actions", async () => {
   const response = await render();
   assert.equal(response.status, 200);

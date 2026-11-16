@@ -38,7 +38,10 @@ export function HeroOrbs() {
         delete button.dataset.dragging;
       };
       const enter = () => { state.active = true; };
-      const leave = () => { state.active = false; };
+      const leave = () => {
+        state.active = false;
+        if (state.pointer < 0) delete button.dataset.lensVisible;
+      };
       const key = (event: KeyboardEvent) => {
         const directions: Record<string, [number, number]> = { ArrowLeft: [-24, 0], ArrowRight: [24, 0], ArrowUp: [0, -24], ArrowDown: [0, 24] };
         if (event.key === "Escape") release();
@@ -62,22 +65,30 @@ export function HeroOrbs() {
       const elapsed = Math.min(40, previousTime ? time - previousTime : 16);
       previousTime = time;
       const scene = hero.getBoundingClientRect();
-      const ratio = 1672 / 941;
-      const imageWidth = Math.min(scene.width, scene.height * ratio);
+      const image = hero.querySelector<HTMLImageElement>(".heroImage");
+      const imageRect = image?.getBoundingClientRect() ?? scene;
+      const ratio = image?.naturalWidth && image.naturalHeight ? image.naturalWidth / image.naturalHeight : 1672 / 941;
+      const imageWidth = Math.min(imageRect.width, imageRect.height * ratio);
       const imageHeight = imageWidth / ratio;
+      const imageLeft = imageRect.left - scene.left + (imageRect.width - imageWidth) / 2;
+      const imageTop = imageRect.top - scene.top + (imageRect.height - imageHeight) / 2;
       for (const state of states) {
         const easing = reduced.matches ? 1 : 1 - Math.exp(-elapsed / (state.pointer >= 0 ? 45 : 160));
         state.x += (state.targetX - state.x) * easing;
         state.y += (state.targetY - state.y) * easing;
         state.button.style.setProperty("--drag-x", `${state.x}px`);
         state.button.style.setProperty("--drag-y", `${state.y}px`);
-        if (!state.active && state.pointer < 0) continue;
+        if (!state.active && state.pointer < 0) {
+          delete state.button.dataset.lensVisible;
+          continue;
+        }
         const rect = state.button.getBoundingClientRect();
         const zoom = reduced.matches ? 1 : 1.035;
         const x = rect.left - scene.left + rect.width / 2;
         const y = rect.top - scene.top + rect.height / 2;
         state.button.style.setProperty("--lens-size", `${imageWidth * zoom}px ${imageHeight * zoom}px`);
-        state.button.style.setProperty("--lens-position", `${rect.width / 2 - (x - (scene.width - imageWidth) / 2) * zoom}px ${rect.height / 2 - (y - (scene.height - imageHeight) / 2) * zoom}px`);
+        state.button.style.setProperty("--lens-position", `${rect.width / 2 - (x - imageLeft) * zoom}px ${rect.height / 2 - (y - imageTop) * zoom}px`);
+        state.button.dataset.lensVisible = "true";
       }
       if (visible) frame = requestAnimationFrame(tick);
     };
