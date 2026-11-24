@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { access, readFile, stat } from "node:fs/promises";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
+import ts from "typescript";
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -10,6 +12,32 @@ async function render() {
     ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
   }, { waitUntil() {}, passThroughOnException() {} });
 }
+
+test("prefetch reuses exact image URLs and limits background concurrency", async () => {
+  const requested = [];
+  class MockImage {
+    set src(value) { this.url = value; requested.push(this); }
+  }
+  const source = await readFile(new URL("../app/artwork-preload.ts", import.meta.url), "utf8");
+  const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
+  const context = { exports: {}, Image: MockImage };
+  runInNewContext(compiled, context);
+  const { preloadArtworkImage, preloadArtworkInBackground } = context.exports;
+  const first = preloadArtworkImage("/original-first.webp");
+  assert.equal(first, preloadArtworkImage("/original-first.webp", "high"));
+  assert.equal(requested.length, 1);
+  assert.equal(requested[0].fetchPriority, "high");
+  requested[0].onload();
+  await first;
+  const pending = ["/a.webp", "/b.webp", "/c.webp"].map(preloadArtworkInBackground);
+  assert.equal(requested.length, 3); // Original + two background requests, third queued.
+  requested[1].onload();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(requested.length, 4);
+  requested[2].onload(); requested[3].onload();
+  await Promise.all(pending);
+  assert.deepEqual(requested.map((image) => image.url), ["/original-first.webp", "/a.webp", "/b.webp", "/c.webp"]);
+});
 
 test("renders Ma Mengyuan's portfolio", async () => {
   const response = await render();

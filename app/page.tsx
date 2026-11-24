@@ -5,6 +5,7 @@ import type { CSSProperties, MouseEvent } from "react";
 import { videoProjects } from "./video-projects";
 import { projects } from "./artworks";
 import { HeroOrbs } from "./hero-orbs";
+import { preloadArtworkImage, preloadArtworkInBackground } from "./artwork-preload";
 
 
 export default function Home() {
@@ -19,8 +20,40 @@ export default function Home() {
   const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [awardsExpanded, setAwardsExpanded] = useState(false);
+  const [readyArtwork, setReadyArtwork] = useState<string | null>(null);
   const selectedProject = selectedProjectIndex === null ? null : projects[selectedProjectIndex];
   const selectedVideo = selectedVideoIndex === null ? null : videoProjects[selectedVideoIndex];
+
+  const warmArtwork = (index: number) => {
+    const project = projects[index];
+    void preloadArtworkImage(project.tiles[0].src, "high");
+    if (project.tiles[1]) void preloadArtworkImage(project.tiles[1].src, "low");
+  };
+
+  useEffect(() => {
+    if (selectedProjectIndex === null || readyArtwork !== projects[selectedProjectIndex].index) return;
+    const next = projects[(selectedProjectIndex + 1) % projects.length];
+    void preloadArtworkInBackground(next.tiles[0].src);
+  }, [selectedProjectIndex, readyArtwork]);
+
+  useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType ?? "")) return;
+    let disposed = false;
+    const timers: number[] = [];
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        const index = Number((entry.target as HTMLElement).dataset.artworkIndex);
+        timers.push(window.setTimeout(() => {
+          if (!disposed) void preloadArtworkInBackground(projects[index].tiles[0].src);
+        }, 200));
+      });
+    }, { rootMargin: "240px 0px", threshold: 0 });
+    document.querySelectorAll("[data-artwork-index]").forEach((card) => observer.observe(card));
+    return () => { disposed = true; timers.forEach(window.clearTimeout); observer.disconnect(); };
+  }, []);
 
   useLayoutEffect(() => {
     const cards = [...document.querySelectorAll<HTMLElement>(".artworkGrid .projectCard")];
@@ -448,6 +481,10 @@ export default function Home() {
                 key={project.title}
                 style={{ "--accent": project.accent } as CSSProperties}
                 onMouseMove={moveProjectGlow}
+                onPointerEnter={() => warmArtwork(projectIndex)}
+                onPointerDown={() => warmArtwork(projectIndex)}
+                onFocus={() => warmArtwork(projectIndex)}
+                data-artwork-index={projectIndex}
                 onClick={() => setSelectedProjectIndex(projectIndex)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") {
@@ -552,9 +589,12 @@ export default function Home() {
             </header>
             <div className="projectReaderBody" key={selectedProject.index}>
               <div className="artworkDetail">
+                {readyArtwork !== selectedProject.index && <p className="artworkLoading" role="status">正在加载作品内容…</p>}
                 {selectedProject.tiles.map((tile, index) => (
                   <img key={tile.src} src={tile.src} width={tile.width} height={tile.height}
-                    alt={`${selectedProject.title} · ${index + 1}`} loading={index === 0 ? "eager" : "lazy"}
+                    alt={`${selectedProject.title} · ${index + 1}`} loading={index < 2 ? "eager" : "lazy"}
+                    fetchPriority={index === 0 ? "high" : "auto"}
+                    onLoad={index === 0 ? () => setReadyArtwork(selectedProject.index) : undefined}
                     decoding="async" />
                 ))}
               </div>
